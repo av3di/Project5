@@ -9,14 +9,17 @@
 class PointModel : public Model
 {
 protected:
-	std::vector<double> v_xyz; // All xyz coords in the xyz file
-	std::vector<double> v_minmax; // the smallest and largest xyz values, respectively
-	int xyzrows = 0; // Rows in the xyz file
+	std::vector<double> v_xyz; // All vertex xyz coords in the obj file
+	std::vector<double> c_rgb; // All rgb values in the obj file
+	std::vector<double> n_xyz; // All normal xyz coords in the obj file
+
+	std::vector<double> v_minmax; // the smallest and largest vertex xyz values, respectively
+	int objrows = 0; // Rows in the xyz file
 
 public:
 	PointModel();
 	~PointModel();
-	virtual void draw();
+	void draw();
 	void parseFile(const char* filename);
 	void findMinMax();
 	void moveToOrigin();

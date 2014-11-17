@@ -9,7 +9,6 @@ class Dragon : public PointModel
 public:
 	Dragon();
 	~Dragon();
-	virtual void draw();
 };
 
 #endif

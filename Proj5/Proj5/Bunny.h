@@ -9,7 +9,6 @@ class Bunny : public PointModel
 public:
 	Bunny();
 	~Bunny();
-	virtual void draw();
 };
 
 #endif

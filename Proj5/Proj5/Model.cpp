@@ -25,10 +25,16 @@ void Model::draw()
 {
 }
 
-void Model::rotate(double a)
+void Model::rotateZ(double a)
 {
 	Matrix4 *rotation = new Matrix4();
 	rotation->makeRotateZ(a);
+	model2world = *rotation * model2world;
+}
+void Model::rotateY(double a)
+{
+	Matrix4 *rotation = new Matrix4();
+	rotation->makeRotateY(a);
 	model2world = *rotation * model2world;
 }
 void Model::scale(double x, double y, double z)

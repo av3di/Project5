@@ -73,8 +73,8 @@ int main(int argc, char *argv[])
   Globals::draco.getMatrix().identity();
 
   // Parse the xyz files and store coords
-  Globals::hop.parseFile("bunny.xyz");
-  Globals::draco.parseFile("dragon.xyz");
+  Globals::hop.parseFile("bunny.obj");
+  Globals::draco.parseFile("dragon.obj");
 
   // Translate and scale the point models
   Globals::hop.moveToOrigin();

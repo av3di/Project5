@@ -20,7 +20,8 @@ public:
 	void changeCounter();
 	void translate(double, double, double);
 	void scale(double, double, double);
-	void rotate(double);
+	void rotateZ(double);
+	void rotateY(double a);
 	void reset();
 };
 

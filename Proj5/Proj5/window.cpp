@@ -114,7 +114,7 @@ void Window::displayCallback()
 }
 
 void Window::processNormalKeys(unsigned char key, int x, int y){
-	Model *currentM;
+	Model *currentM = &Globals::hop;
 	if (fkey == 1)
 		currentM = &Globals::cube;
 	else if (fkey == 2)
@@ -157,10 +157,16 @@ void Window::processNormalKeys(unsigned char key, int x, int y){
 		currentM->scale(1.5, 1.5, 1.5);
 		break;
 	case 'o':
-		currentM->rotate(10);
+		currentM->rotateZ(10);
 		break;
 	case 'O':
-		currentM->rotate(-10);
+		currentM->rotateZ(-10);
+		break;
+	case 'e':
+		currentM->rotateY(10);
+		break;
+	case 'E':
+		currentM->rotateY(-10);
 		break;
 	case 'r':
 		currentM->getMatrix().makeRotateY(1.0);

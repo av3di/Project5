@@ -44,9 +44,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\glut\glut-3.7.6-bin;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\glut\glut-3.7.6-bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -64,6 +66,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bear.cpp" />
+    <ClCompile Include="Bunny.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="cube.cpp" />
+    <ClCompile Include="Dragon.cpp" />
+    <ClCompile Include="House.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Matrix4.cpp" />
+    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="PointModel.cpp" />
+    <ClCompile Include="vector3.cpp" />
+    <ClCompile Include="Vector4.cpp" />
+    <ClCompile Include="window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Bear.h" />
+    <ClInclude Include="Bunny.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="cube.h" />
+    <ClInclude Include="Dragon.h" />
+    <ClInclude Include="House.h" />
+    <ClInclude Include="main.h" />
+    <ClInclude Include="Matrix4.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="PointModel.h" />
+    <ClInclude Include="vector3.h" />
+    <ClInclude Include="Vector4.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
