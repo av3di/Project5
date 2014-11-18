@@ -14,8 +14,9 @@ using namespace std;
 int Window::width  = 512;   // set window width in pixels here
 int Window::height = 512;   // set window height in pixels here
 
-int Window::fkey = 1;  // If 1, show cube, 2->show 1st cam, 3->show 2nd cam
+Model *currentM = &Globals::hop;
 
+int Window::fkey = 1;  // If 1, show cube, 2->show 1st cam, 3->show 2nd cam 
 
 //----------------------------------------------------------------------------
 // Callback method called when system is idle.
@@ -124,8 +125,78 @@ void Window::displayCallback()
   }
 }
 
+void Window::trackBallMapping(Vector3 &cp)
+{
+	Vector3 copy;
+	double d_height = height;
+	double d_width = width;
+	double d;
+	copy.setX(cp.getX()); copy.setY(cp.getY());  copy.setZ(cp.getZ());
+	cp.setX(((2.0  * copy.getX()) - d_width)/d_width);
+	cp.setY((d_height - (2.0 * copy.getY()))/d_height);
+	cp.setZ(0.0);
+	d = cp.length();
+	d = (d < 1.0) ? d : 1.0;
+	cp.setZ(sqrt(1.001 - d * d));
+	cp.normalize();
+}
+void Window::processMouse(int button, int state, int x, int y)
+{
+	Vector3 direction;
+	static int last_x = 0;
+	static int last_y = 0;
+	static Vector3 last_point;
+	if (state == GLUT_DOWN)
+	{
+		last_x = x;
+		last_y = y;
+		last_point.setX(last_x);
+		last_point.setY(last_y);
+		last_point.setZ(0);
+	}
+	else  // Mouse key has been released
+	{
+		Vector3 current_point;
+		current_point.setX(x);
+		current_point.setY(y);
+		current_point.setZ(0);
+		trackBallMapping(last_point);
+		trackBallMapping(current_point);
+		if (button == GLUT_LEFT_BUTTON) // Rotation
+		{
+
+			direction = current_point - last_point;
+			double velocity = direction.length();
+			if (velocity > 0.0001)
+			{
+				last_point.print("last_point: ");
+				current_point.print("current_point: ");
+				
+				Vector3 rotation_axis = last_point.cross(current_point);
+				double theta = last_point.dot(current_point);
+				double denominator = last_point.length()*current_point.length();
+				theta = (theta / denominator) * M_PI / 180.0;
+				double rotation_angle = cos(theta); // rotation angle in radians
+				
+				rotation_axis.print("raxis: ");
+
+				/*rotation_axis.setX(0);
+				rotation_axis.setY(1);
+				rotation_axis.setZ(0);*/
+				currentM->rotate(rotation_axis, rotation_angle);
+			}
+		}
+		else // Right mouse button for scale
+		{
+			double diff = current_point.getY() - last_point.getY();
+			double zoom_factor = 1.0 + diff + 0.1;
+			currentM->scale(zoom_factor, zoom_factor, zoom_factor);
+		}
+	}
+
+
+}
 void Window::processNormalKeys(unsigned char key, int x, int y){
-	Model *currentM = &Globals::hop;
 	if (fkey == 1)
 		currentM = &Globals::cube;
 	else if (fkey == 2)

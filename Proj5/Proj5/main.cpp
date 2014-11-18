@@ -108,6 +108,7 @@ int main(int argc, char *argv[])
   // Process the keys pressed
   glutKeyboardFunc(Window::processNormalKeys);
   glutSpecialFunc(Window::processSpecialKeys);
+  glutMouseFunc(Window::processMouse);
 
   glutMainLoop();
 }

@@ -20,6 +20,7 @@ public:
 	void changeCounter();
 	void translate(double, double, double);
 	void scale(double, double, double);
+	void rotate(Vector3 rotation_axis, double deg_angle);
 	void rotateZ(double);
 	void rotateY(double a);
 	void reset();

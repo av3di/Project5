@@ -25,6 +25,14 @@ void Model::draw()
 {
 }
 
+void Model::rotate(Vector3 rotation_axis, double deg_angle)
+{
+	Matrix4 *rotation = new Matrix4();
+	rotation->makeRotate(deg_angle, rotation_axis);
+	rotation->print("rotation matrix: ");
+	model2world = *rotation * model2world;
+}
+
 void Model::rotateZ(double a)
 {
 	Matrix4 *rotation = new Matrix4();

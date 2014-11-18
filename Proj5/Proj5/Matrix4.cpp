@@ -123,15 +123,20 @@ void Matrix4::identity()
 }
 
 void Matrix4::makeRotate(double angle, const Vector3 &axis){
-	m[0][0] = 1 + (1 - cos(angle))*(pow(axis.x,2) - 1);
-	m[0][1] = -axis.z*sin(angle) + (1 - cos(angle)*axis.x*axis.y);
-	m[0][2] = axis.y*sin(angle) + (1 - cos(angle)*axis.x*axis.z);
-	m[1][0] = axis.z*sin(angle) + (1 - cos(angle)*axis.y*axis.x);
-	m[1][1] = 1 + (1 - cos(angle))*(pow(axis.y, 2) - 1);
-	m[1][2] = -axis.x*sin(angle) + (1 - cos(angle)*axis.y*axis.z);
-	m[2][0] = -axis.y*sin(angle) + (1 - cos(angle)*axis.z*axis.x);
-	m[2][1] = axis.x*sin(angle) + (1 - cos(angle)*axis.z*axis.y);
-	m[2][2] = 1 + (1 - cos(angle)*(pow(axis.z, 2) - 1));
+	//angle = angle * M_PI / 180.0; // deg to radians
+	//angle /= 180.0 * M_PI;
+	identity();
+	m[0][0] = cos(angle) + pow(axis.x, 2.0)*(1.0 - cos(angle));
+	m[0][1] = axis.x * axis.y * (1.0 - cos(angle)) - axis.z * sin(angle);
+	m[0][2] = axis.x * axis.z * (1.0 - cos(angle)) + axis.y * sin(angle);
+
+	m[1][0] = axis.y * axis.x * (1.0 - cos(angle)) + axis.z * sin(angle);
+	m[1][1] = cos(angle) + pow(axis.y, 2.0) * (1.0 - cos(angle));
+	m[1][2] = axis.y * axis.z * (1.0 - cos(angle)) - axis.x * sin(angle);
+
+	m[2][0] = axis.z * axis.x * (1.0 - cos(angle)) - axis.y * sin(angle);
+	m[2][1] = axis.z * axis.y * (1.0 - cos(angle)) + axis.x * sin(angle);
+	m[2][2] = cos(angle) + pow(axis.z, 2.0) * (1.0 - cos(angle));
 }
 void Matrix4::makeScale(double sx, double sy, double sz){
 	m[0][0] = sx;
