@@ -14,6 +14,7 @@
 #include "House.h"
 #include "Bunny.h"
 #include "Dragon.h"
+#include "Bear.h"
 
 using namespace std;
 
@@ -25,6 +26,7 @@ namespace Globals
   House h;
   Bunny hop;
   Dragon draco;
+  Bear little_bear;
   double viewAngle = 60.0;
   int camZ = -20;
 };
@@ -71,10 +73,12 @@ int main(int argc, char *argv[])
   Globals::h.getMatrix().identity();
   Globals::hop.getMatrix().identity();
   Globals::draco.getMatrix().identity();
+  Globals::little_bear.getMatrix().identity();
 
   // Parse the xyz files and store coords
   Globals::hop.parseFile("bunny.obj");
   Globals::draco.parseFile("dragon.obj");
+  Globals::little_bear.parseFile("bear.obj");
 
   // Translate and scale the point models
   Globals::hop.moveToOrigin();
@@ -82,6 +86,9 @@ int main(int argc, char *argv[])
 
   Globals::draco.moveToOrigin();
   Globals::draco.fitToWindow();
+
+  Globals::little_bear.moveToOrigin();
+  Globals::little_bear.fitToWindow();
 
   // Construct the F1 Camera
   Globals::cam1.sete(0, 10, 10);

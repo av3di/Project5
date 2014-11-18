@@ -1,6 +1,6 @@
 #ifndef _WINDOW_H_
 #define _WINDOW_H_
-
+#include "main.h"
 
 class Window	  // OpenGL output window related routines
 {

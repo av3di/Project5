@@ -6,6 +6,7 @@
 #include "House.h"
 #include "Bunny.h"
 #include "Dragon.h"
+#include "Bear.h"
 
 namespace Globals
 {
@@ -15,6 +16,7 @@ namespace Globals
 	extern House h;
 	extern Bunny hop;
 	extern Dragon draco;
+	extern Bear little_bear;
 	extern double viewAngle;
 	extern int camZ;
 }

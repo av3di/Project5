@@ -48,6 +48,9 @@ void Window::processSpecialKeys(int key, int x, int y)
 	case GLUT_KEY_F5:
 		Window::fkey = 5;
 		break;
+	case GLUT_KEY_F6:
+		Window::fkey = 6;
+		break;
 	}
 }
 
@@ -111,6 +114,14 @@ void Window::displayCallback()
 	  glDisable(GL_LIGHTING);
 	  Globals::draco.draw();
   }
+  else if (fkey == 6)
+  {
+	  glmatrix = Globals::little_bear.getMatrix();
+	  glmatrix.transpose();
+	  glLoadMatrixd(glmatrix.getPointer());
+	  glDisable(GL_LIGHTING);
+	  Globals::little_bear.draw();
+  }
 }
 
 void Window::processNormalKeys(unsigned char key, int x, int y){
@@ -125,6 +136,8 @@ void Window::processNormalKeys(unsigned char key, int x, int y){
 		currentM = &Globals::hop;
 	else if (fkey == 5)
 		currentM = &Globals::draco;
+	else if (fkey == 6)
+		currentM = &Globals::little_bear;
 	switch (key){
 	case 27:
 		exit(0);
