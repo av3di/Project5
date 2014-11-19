@@ -16,13 +16,12 @@ int Window::height = 512;   // set window height in pixels here
 
 Model *currentM = &Globals::hop;
 
-int Window::fkey = 1;  // If 1, show cube, 2->show 1st cam, 3->show 2nd cam 
+int Window::fkey = 1;  // If 1, show bunny, 2->show dragon, 3->show bear
 
 //----------------------------------------------------------------------------
 // Callback method called when system is idle.
 void Window::idleCallback()
 {
-	Globals::cube.spin(0.1);   // rotate cube; if it spins too fast try smaller values and vice versa
 	//Globals::hop.spin(0.5);
 	//Globals::draco.spin(0.5);
 	displayCallback();         // call display routine to show the cube
@@ -42,15 +41,6 @@ void Window::processSpecialKeys(int key, int x, int y)
 		break;
 	case GLUT_KEY_F3:
 		Window::fkey = 3;
-		break;
-	case GLUT_KEY_F4:
-		Window::fkey = 4;
-		break;
-	case GLUT_KEY_F5:
-		Window::fkey = 5;
-		break;
-	case GLUT_KEY_F6:
-		Window::fkey = 6;
 		break;
 	}
 }
@@ -78,49 +68,36 @@ void Window::displayCallback()
   glMatrixMode(GL_MODELVIEW);  // make sure we're in Modelview mode
   Matrix4 glmatrix;
 
+ 
+  glmatrix = Globals::point.getMatrix();
+  glmatrix.transpose();
+  glLoadMatrixd(glmatrix.getPointer());
+  Globals::point.draw(1.0, 20, 20, true);
+
+  glmatrix = Globals::spot.getMatrix();
+  glmatrix.transpose();
+  glLoadMatrixd(glmatrix.getPointer());
+  Globals::point.draw(1.0, 20, 20, false);
+
   if (fkey == 1)
-  {
-	  glEnable(GL_LIGHTING);
-	  glmatrix = Globals::cube.getMatrix();
-	  glmatrix.transpose();
-	  glLoadMatrixd(glmatrix.getPointer());
-	  Globals::cube.draw();
-  }
-  else if (fkey == 2)
-  {
-	  glDisable(GL_LIGHTING);
-	  glLoadMatrixd(Globals::cam1.getMatrix().getPointer());
-	  Globals::h.draw();
-  }
-  else if (fkey == 3)
-  {
-	  glDisable(GL_LIGHTING);
-	  glLoadMatrixd(Globals::cam2.getMatrix().getPointer());
-	  Globals::h.draw();
-  }
-  else if (fkey == 4)
   {
 	  glmatrix = Globals::hop.getMatrix();
 	  glmatrix.transpose();
 	  glLoadMatrixd(glmatrix.getPointer());
-
-	  glDisable(GL_LIGHTING);
 	  Globals::hop.draw();
   }
-  else if (fkey == 5)
+  else if (fkey == 2)
   {
 	  glmatrix = Globals::draco.getMatrix();
 	  glmatrix.transpose();
 	  glLoadMatrixd(glmatrix.getPointer());
-	  glDisable(GL_LIGHTING);
 	  Globals::draco.draw();
   }
-  else if (fkey == 6)
+  else if (fkey == 3)
   {
 	  glmatrix = Globals::little_bear.getMatrix();
 	  glmatrix.transpose();
 	  glLoadMatrixd(glmatrix.getPointer());
-	  glDisable(GL_LIGHTING);
 	  Globals::little_bear.draw();
   }
 }
@@ -198,16 +175,10 @@ void Window::processMouse(int button, int state, int x, int y)
 }
 void Window::processNormalKeys(unsigned char key, int x, int y){
 	if (fkey == 1)
-		currentM = &Globals::cube;
-	else if (fkey == 2)
-		currentM = &Globals::h;
-	else if (fkey == 3)
-		currentM = &Globals::h;
-	else if (fkey == 4)
 		currentM = &Globals::hop;
-	else if (fkey == 5)
+	else if (fkey == 2)
 		currentM = &Globals::draco;
-	else if (fkey == 6)
+	else if (fkey == 3)
 		currentM = &Globals::little_bear;
 	switch (key){
 	case 27:

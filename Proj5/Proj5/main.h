@@ -7,6 +7,8 @@
 #include "Bunny.h"
 #include "Dragon.h"
 #include "Bear.h"
+#include "Light.h"
+#include "Sphere.h"
 
 namespace Globals
 {
@@ -17,6 +19,13 @@ namespace Globals
 	extern Bunny hop;
 	extern Dragon draco;
 	extern Bear little_bear;
+
+	extern Light point_light;
+	extern Light spot_light;
+
+	extern Sphere point;
+	extern Sphere spot;
+
 	extern double viewAngle;
 	extern int camZ;
 }
