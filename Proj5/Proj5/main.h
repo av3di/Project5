@@ -9,6 +9,7 @@
 #include "Bear.h"
 #include "Light.h"
 #include "Sphere.h"
+#include "Material.h"
 
 namespace Globals
 {
@@ -25,6 +26,10 @@ namespace Globals
 
 	extern Sphere point;
 	extern Sphere spot;
+
+	extern Material little_bear_material;
+	extern Material draco_material;
+	extern Material hop_material;
 
 	extern double viewAngle;
 	extern int camZ;

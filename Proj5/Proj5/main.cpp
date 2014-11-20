@@ -17,6 +17,7 @@
 #include "Bear.h"
 #include "Light.h"
 #include "Sphere.h"
+#include "Material.h"
 
 using namespace std;
 
@@ -33,6 +34,10 @@ namespace Globals
   Light point_light(GL_LIGHT0);
   Light spot_light(GL_LIGHT1);
 
+  Material hop_material;
+  Material draco_material;
+  Material little_bear_material;
+
   Sphere point;
   Sphere spot;
 
@@ -42,9 +47,10 @@ namespace Globals
 
 int main(int argc, char *argv[])
 {
-  float specular[]  = {1.0, 1.0, 1.0, 1.0};
+ /* float specular[]  = {1.0, 1.0, 1.0, 1.0};
   float shininess[] = {100.0};
   float position[]  = {0.0, 10.0, 1.0, 0.0};	// lightsource position
+  */
   
   glutInit(&argc, argv);      	      	      // initialize GLUT
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);   // open an OpenGL context with double buffering, RGB colors, and depth buffering
@@ -60,10 +66,10 @@ int main(int argc, char *argv[])
   glMatrixMode(GL_PROJECTION); 
   
   // Generate material properties:
-  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+  /*glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
   glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
   glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-  glEnable(GL_COLOR_MATERIAL);
+  glEnable(GL_COLOR_MATERIAL);*/
   
   // Generate light source:
   /*glLightfv(GL_LIGHT0, GL_POSITION, position);
@@ -78,13 +84,23 @@ int main(int argc, char *argv[])
   glutReshapeFunc(Window::reshapeCallback);
   glutIdleFunc(Window::idleCallback);
 
-  Globals::point_light.setColor(0.0, 0.25, 0.0, 0.0, 1.0, 0.0, 1.0);
+  Globals::hop_material.setDiffandAmb(0.1, 0.0, 0.0, 1.0);
+  Globals::hop_material.setSpec(1.0, 0.0, 0.0, 0.0, 20.0);
+
+  Globals::draco_material.setDiffandAmb(0.3, 0.0, 0.3, 1.0);
+  Globals::draco_material.setSpec(0.1, 0.0, 0.1, 0.1, 1.0);
+
+  Globals::little_bear_material.setDiffandAmb(0.0, 0.5, 0.5, 1.0);
+  Globals::little_bear_material.setSpec(0.0, 0.5, 0.5, 1.0, 10.0);
+
+
+  Globals::point_light.setColor(0.25, 0.25, 0.25, 1.0, 1.0, 1.0, 1.0);
   Globals::point_light.setPosition(0.0, 7.0, 7.0, 1.0);
   Globals::point_light.on();
 
 
   Globals::spot_light.setSpotLight(35, 0.0, 0.0, -1.0);
-  Globals::spot_light.setColor(0.25, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0);
+  Globals::spot_light.setColor(0.25, 0.25, 0.25, 1.0, 1.0, 1.0, 1.0);
   Globals::spot_light.setPosition(8.0, 0.0, 7.0, 1.0);
   Globals::spot_light.on();
 

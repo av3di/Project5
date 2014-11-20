@@ -83,6 +83,8 @@ void Window::displayCallback()
   {
 	  glmatrix = Globals::hop.getMatrix();
 	  glmatrix.transpose();
+
+	  Globals::hop_material.on();
 	  glLoadMatrixd(glmatrix.getPointer());
 	  Globals::hop.draw();
   }
@@ -90,6 +92,8 @@ void Window::displayCallback()
   {
 	  glmatrix = Globals::draco.getMatrix();
 	  glmatrix.transpose();
+
+	  Globals::draco_material.on();
 	  glLoadMatrixd(glmatrix.getPointer());
 	  Globals::draco.draw();
   }
@@ -97,6 +101,8 @@ void Window::displayCallback()
   {
 	  glmatrix = Globals::little_bear.getMatrix();
 	  glmatrix.transpose();
+
+	  Globals::little_bear_material.on();
 	  glLoadMatrixd(glmatrix.getPointer());
 	  Globals::little_bear.draw();
   }
