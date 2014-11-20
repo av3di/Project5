@@ -15,7 +15,7 @@ int Window::width  = 512;   // set window width in pixels here
 int Window::height = 512;   // set window height in pixels here
 
 Model *currentM = &Globals::hop;
-
+bool Window::per_pixel = false;
 int Window::fkey = 1;  // If 1, show bunny, 2->show dragon, 3->show bear
 
 //----------------------------------------------------------------------------
@@ -35,12 +35,15 @@ void Window::processSpecialKeys(int key, int x, int y)
 	switch (key) {
 	case GLUT_KEY_F1:
 		Window::fkey = 1;
+		currentM = &Globals::hop;
 		break;
 	case GLUT_KEY_F2:
 		Window::fkey = 2;
+		currentM = &Globals::draco;
 		break;
 	case GLUT_KEY_F3:
 		Window::fkey = 3;
+		currentM = &Globals::little_bear;
 		break;
 	}
 }
@@ -68,7 +71,11 @@ void Window::displayCallback()
   glMatrixMode(GL_MODELVIEW);  // make sure we're in Modelview mode
   Matrix4 glmatrix;
 
- 
+  if (per_pixel)
+	  Globals::point_light.off();
+  else
+	  Globals::point_light.on();
+
   glmatrix = Globals::point.getMatrix();
   glmatrix.transpose();
   glLoadMatrixd(glmatrix.getPointer());
@@ -86,6 +93,7 @@ void Window::displayCallback()
 
 	  Globals::hop_material.on();
 	  glLoadMatrixd(glmatrix.getPointer());
+
 	  Globals::hop.draw();
   }
   else if (fkey == 2)
@@ -161,8 +169,8 @@ void Window::processMouse(int button, int state, int x, int y)
 				theta = (theta / denominator) * M_PI / 180.0;
 				double rotation_angle = cos(theta); // rotation angle in radians
 				
-				rotation_axis.print("raxis: ");
-
+				//rotation_axis.print("raxis: ");
+				rotation_axis.normalize();
 				/*rotation_axis.setX(0);
 				rotation_axis.setY(1);
 				rotation_axis.setZ(0);*/
@@ -180,12 +188,12 @@ void Window::processMouse(int button, int state, int x, int y)
 
 }
 void Window::processNormalKeys(unsigned char key, int x, int y){
-	if (fkey == 1)
+	/*if (fkey == 1)
 		currentM = &Globals::hop;
 	else if (fkey == 2)
 		currentM = &Globals::draco;
 	else if (fkey == 3)
-		currentM = &Globals::little_bear;
+		currentM = &Globals::little_bear;*/
 	switch (key){
 	case 27:
 		exit(0);
@@ -233,5 +241,10 @@ void Window::processNormalKeys(unsigned char key, int x, int y){
 		currentM->getMatrix().makeRotateY(1.0);
 		//currentM->reset();
 		break;
+	case 'p':
+		if (per_pixel)
+			per_pixel = false;
+		else
+			per_pixel = true;
 	}
 }

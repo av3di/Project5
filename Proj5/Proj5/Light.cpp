@@ -44,5 +44,5 @@ void Light::on()
 void Light::off()
 {
 	glDisable(id);
-	glDisable(GL_LIGHTING);
+	//glDisable(GL_LIGHTING);
 }
