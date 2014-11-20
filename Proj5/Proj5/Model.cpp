@@ -1,7 +1,4 @@
 #include "Model.h"
-#include "Cube.h"
-#include "Matrix4.h"
-#include <GL/glut.h>
 
 using namespace std;
 

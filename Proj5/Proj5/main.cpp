@@ -1,32 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-
-#include <GL/glut.h>
-
-#include "Window.h"
-#include "Cube.h"
-#include "Matrix4.h"
 #include "main.h"
-#include "vector3.h"
-#include "Vector4.h"
-#include "Camera.h"
-#include "House.h"
-#include "Bunny.h"
-#include "Dragon.h"
+#include "GL\glut.h"
 #include "Bear.h"
-#include "Light.h"
-#include "Sphere.h"
-#include "Material.h"
 
 using namespace std;
 
 namespace Globals
 {
-  Cube cube;
-  Camera cam1;
-  Camera cam2;
-  House h;
   Bunny hop;
   Dragon draco;
   Bear little_bear;
@@ -47,10 +29,10 @@ namespace Globals
 
 int main(int argc, char *argv[])
 {
- /* float specular[]  = {1.0, 1.0, 1.0, 1.0};
+  float specular[]  = {1.0, 1.0, 1.0, 1.0};
   float shininess[] = {100.0};
-  float position[]  = {0.0, 10.0, 1.0, 0.0};	// lightsource position
-  */
+  float position[]  = {0.0, 10.0, 10.0, 0.0};	// lightsource position
+  
   
   glutInit(&argc, argv);      	      	      // initialize GLUT
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);   // open an OpenGL context with double buffering, RGB colors, and depth buffering
@@ -72,9 +54,9 @@ int main(int argc, char *argv[])
   glEnable(GL_COLOR_MATERIAL);*/
   
   // Generate light source:
-  /*glLightfv(GL_LIGHT0, GL_POSITION, position);
+ /* glLightfv(GL_LIGHT7, GL_POSITION, position);
   glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);*/
+  glEnable(GL_LIGHT7);*/
  
   glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
   glEnable(GL_NORMALIZE);
@@ -96,6 +78,7 @@ int main(int argc, char *argv[])
 
   Globals::point_light.setColor(0.25, 0.25, 0.25, 1.0, 1.0, 1.0, 1.0);
   Globals::point_light.setPosition(0.0, 7.0, 7.0, 1.0);
+
   Globals::point_light.on();
 
 

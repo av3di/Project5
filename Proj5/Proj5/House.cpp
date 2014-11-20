@@ -1,5 +1,4 @@
 #include "House.h"
-#include <GL/glut.h>
 
 House::House() : nVerts(42), 
 // These are the x,y,z coordinates of the vertices of the triangles

@@ -1,13 +1,12 @@
 #include <stdio.h>
 #include <iostream>
+#include "GL\GLee.h"
 #include <GL/glut.h>
 
 #include "Window.h"
-#include "Cube.h"
-#include "Matrix4.h"
 #include "main.h"
-#include "Camera.h"
-#include "House.h"
+#include "GL\GLee.h"
+#include "GL\glut.h"
 
 using namespace std;
 
@@ -15,6 +14,8 @@ int Window::width  = 512;   // set window width in pixels here
 int Window::height = 512;   // set window height in pixels here
 
 Model *currentM = &Globals::hop;
+
+bool Window::per_pixel = false; // enable per pixel lighting
 
 int Window::fkey = 1;  // If 1, show bunny, 2->show dragon, 3->show bear
 
@@ -67,7 +68,15 @@ void Window::displayCallback()
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear color and depth buffers
   glMatrixMode(GL_MODELVIEW);  // make sure we're in Modelview mode
   Matrix4 glmatrix;
-
+ 
+  if (per_pixel)  // turn off point light if per pixel shading is on
+  {
+	  Globals::point_light.off();
+  }
+  else
+  {
+	  Globals::point_light.on();
+  }
  
   glmatrix = Globals::point.getMatrix();
   glmatrix.transpose();
@@ -162,7 +171,7 @@ void Window::processMouse(int button, int state, int x, int y)
 				double rotation_angle = cos(theta); // rotation angle in radians
 				
 				rotation_axis.print("raxis: ");
-
+				rotation_axis.normalize();
 				/*rotation_axis.setX(0);
 				rotation_axis.setY(1);
 				rotation_axis.setZ(0);*/
@@ -233,5 +242,10 @@ void Window::processNormalKeys(unsigned char key, int x, int y){
 		currentM->getMatrix().makeRotateY(1.0);
 		//currentM->reset();
 		break;
+	case 'p':
+		if (per_pixel)
+			per_pixel = false;
+		else
+			per_pixel = true;
 	}
 }
