@@ -2,7 +2,6 @@
 #define _MODEL_H_
 
 #include "Matrix4.h"
-#include "vector3.h"
 
 
 class Model

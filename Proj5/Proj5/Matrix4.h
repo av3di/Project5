@@ -1,9 +1,7 @@
 #ifndef _MATRIX4_H_
 #define _MATRIX4_H_
-
-#include "main.h"
 #include "Vector4.h"
-#include "vector3.h"
+#include "Vector3.h"
 #include <string>
 #include <iostream>
 #define M_PI 3.14159265358979323846

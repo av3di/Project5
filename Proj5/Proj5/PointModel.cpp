@@ -1,5 +1,5 @@
 #include "PointModel.h"
-
+#include "main.h"
 
 PointModel::PointModel()
 {
@@ -18,18 +18,8 @@ void PointModel::parseFile(const char* filename)
 	char c1;
 	char c2;
 	char comment[100];
-	double x, y, z, r, g, b, n_x, n_y, n_z; // xyz vertex position, rgb vertex color
+	double x, y, z, r, g, b; // xyz vertex position, rgb vertex color
 	int index1, index2, index3;
-
-	// Fragment Shader
-	Vector4 diffuse, ambientGlobal, ambient, ecPos;
-	Vector3 normal, halfVector;
-	double dist = 0;
-	Vector3 n, halfV;
-	double NdotL, NdotHV;
-	Vector4 color = ambientGlobal;
-	float att, spotEffect;
-
 	errno_t err = fopen_s(&objf, filename, "r");
 	if (err != 0)
 	{
@@ -40,7 +30,9 @@ void PointModel::parseFile(const char* filename)
 		for (int row = 0; row < objrows; row++)
 		{ 
 			fscanf_s(objf, "%c", &c1, sizeof(c1));
+			//cout << "grabbed c1 is :" << c1 << endl;
 			c2 = fgetc(objf); 
+			//cout << "grabbed c2 is : " << c2 << endl;
 			if (c1 == 'v' && c2 == ' ') // vertex position and color
 			{
 				fscanf_s(objf, "%lf", &x, sizeof(x));
@@ -62,22 +54,27 @@ void PointModel::parseFile(const char* filename)
 				c_rgb.push_back(r);
 				c_rgb.push_back(g);
 				c_rgb.push_back(b);
-
-				normal.setX(n_x); normal.setY(n_y); normal.setZ(n_z);
-				normal.normalize();
-				
-				//halfVector = gl_LightSource[0].halfVector.xyz;
-
+				/*cout << "entered vertex color " << endl;
+				cout << "x: " << x << endl;
+				cout << "y: " << y << endl;
+				cout << "z: " << z << endl;
+				cout << "r: " << r << endl;
+				cout << "g: " << g << endl;
+				cout << "b: " << b << endl;*/
 				fgets(comment, 100, objf);  // get the rest of the line
 			}
 			else if (c1 == 'v' && c2 == 'n') // vertex normal
 			{
-				fscanf_s(objf, "%lf", &n_x, sizeof(n_x));
-				fscanf_s(objf, "%lf", &n_y, sizeof(n_y));
-				fscanf_s(objf, "%lf", &n_z, sizeof(n_z));
-				n_xyz.push_back(n_x);
-				n_xyz.push_back(n_y);
-				n_xyz.push_back(n_z);
+				//cout << "entered normal " << endl;
+				fscanf_s(objf, "%lf", &x, sizeof(x));
+				fscanf_s(objf, "%lf", &y, sizeof(y));
+				fscanf_s(objf, "%lf", &z, sizeof(z));
+				n_xyz.push_back(x);
+				n_xyz.push_back(y);
+				n_xyz.push_back(z);
+				/*cout << "x: " << x << endl;
+				cout << "y: " << y << endl;
+				cout << "z: " << z << endl;*/
 				fgets(comment, 100, objf);  // get the rest of the line
 			}
 			else if (c1 == 'f' && c2 == ' ') // face
@@ -92,10 +89,14 @@ void PointModel::parseFile(const char* filename)
 				faces.push_back(index2);
 				faces.push_back(index3);
 				fgets(comment, 100, objf);  // get the comment line
+			//	cout << "entered face " << endl;
+				// delete[]comment;
 			}
 			else if (c1 == '#') // Comment
 			{
 				fgets(comment, 100, objf);  // get the comment line
+			//	cout << "entered comment " << endl;
+				//delete []comment;
 			}
 			//getchar();
 		}

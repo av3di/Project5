@@ -1,13 +1,7 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
-//#include "GL\GLee.h"
-#include "vector3.h"
-#include "Vector4.h"
-#include "Matrix4.h"
-#include "Model.h"
-#include "PointModel.h"
-#include "cube.h"
+#include "Cube.h"
 #include "Camera.h"
 #include "House.h"
 #include "Bunny.h"
@@ -16,8 +10,6 @@
 #include "Light.h"
 #include "Sphere.h"
 #include "Material.h"
-#include "Window.h"
-#include "GL\glut.h"
 
 namespace Globals
 {

@@ -97,6 +97,7 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="PointModel.h" />
     <ClInclude Include="Sphere.h" />
+    <ClInclude Include="vector3.h" />
     <ClInclude Include="Vector4.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

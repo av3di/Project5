@@ -1,8 +1,8 @@
 #ifndef _CAMERA_H_
 #define _CAMERA_H_
 
-#include "main.h"
-
+#include "Matrix4.h"
+#include <GL/glut.h>
 
 class Camera
 {

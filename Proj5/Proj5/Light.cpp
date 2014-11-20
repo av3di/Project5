@@ -1,5 +1,5 @@
 #include "Light.h"
-//#include "GL\GLee.h"
+#include "GL\glut.h"
 
 Light::Light(int n_id) : id(n_id)
 {
@@ -44,5 +44,5 @@ void Light::on()
 void Light::off()
 {
 	glDisable(id);
-	//glDisable(GL_LIGHTING);
+	glDisable(GL_LIGHTING);
 }
