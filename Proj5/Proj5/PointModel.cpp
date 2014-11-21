@@ -19,6 +19,7 @@ void PointModel::parseFile(const char* filename)
 	char comment[100];
 	double x, y, z, r, g, b; // xyz vertex position, rgb vertex color
 	int index1, index2, index3;
+	
 	errno_t err = fopen_s(&objf, filename, "r");
 	if (err != 0)
 	{

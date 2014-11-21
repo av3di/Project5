@@ -9,7 +9,8 @@
 #include <vector>
 #include <array>
 
-
+#include <Windows.h>
+#include "GL\GLee.h"
 #include "GL\glut.h"
 
 #define M_PI 3.14159265358979323846

@@ -1,14 +1,10 @@
-﻿Build started 11/20/2014 9:42:31 PM.
-     1>Project "C:\Users\Evonee\Documents\CSE 167\Project_5\Project5\Proj5\Proj5\Proj5.vcxproj" on node 2 (Build target(s)).
+﻿Build started 11/20/2014 10:03:42 PM.
+     1>Project "C:\Users\Evonee\Documents\CSE 167\Project_5\Project5\Proj5\Proj5\Proj5.vcxproj" on node 2 (Rebuild target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\glut\glut-3.7.6-bin" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Bear.cpp Bunny.cpp Dragon.cpp Light.cpp Material.cpp Matrix4.cpp Model.cpp PointModel.cpp Sphere.cpp Vector4.cpp main.cpp vector3.cpp window.cpp
-         Bear.cpp
-         Generating Code...
-         Compiling...
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\glut\glut-3.7.6-bin" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Bear.cpp Bunny.cpp Dragon.cpp Light.cpp main.cpp Material.cpp Matrix4.cpp Model.cpp PointModel.cpp Sphere.cpp vector3.cpp Vector4.cpp window.cpp
          window.cpp
-         vector3.cpp
-         main.cpp
          Vector4.cpp
+         vector3.cpp
          Sphere.cpp
          PointModel.cpp
      1>c:\users\evonee\documents\cse 167\project_5\project5\proj5\proj5\pointmodel.cpp(96): warning C4018: '<' : signed/unsigned mismatch
@@ -16,9 +12,11 @@
          Model.cpp
          Matrix4.cpp
          Material.cpp
+         main.cpp
          Light.cpp
          Dragon.cpp
          Bunny.cpp
+         Bear.cpp
          Generating Code...
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Evonee\Documents\CSE 167\Project_5\Project5\Proj5\Debug\Proj5.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\glut\glut-3.7.6-bin" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Evonee\Documents\CSE 167\Project_5\Project5\Proj5\Debug\Proj5.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Evonee\Documents\CSE 167\Project_5\Project5\Proj5\Debug\Proj5.lib" /MACHINE:X86 Debug\Bear.obj
@@ -35,8 +33,8 @@
          Debug\Vector4.obj
          Debug\window.obj
          Proj5.vcxproj -> C:\Users\Evonee\Documents\CSE 167\Project_5\Project5\Proj5\Debug\Proj5.exe
-     1>Done Building Project "C:\Users\Evonee\Documents\CSE 167\Project_5\Project5\Proj5\Proj5\Proj5.vcxproj" (Build target(s)).
+     1>Done Building Project "C:\Users\Evonee\Documents\CSE 167\Project_5\Project5\Proj5\Proj5\Proj5.vcxproj" (Rebuild target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:31.91
+Time Elapsed 00:00:31.86
