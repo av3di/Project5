@@ -18,6 +18,10 @@ namespace Globals
   Sphere point;
   Sphere spot;
 
+  Vector3 l, X, Y, Z; //usually d, look at point aka near plane normal
+  double nh;
+
+  double plane_distance = 0.0;
   double viewAngle = 60.0;
   int camZ = -20;
 };
@@ -61,38 +65,42 @@ int main(int argc, char *argv[])
   glutReshapeFunc(Window::reshapeCallback);
   glutIdleFunc(Window::idleCallback);
 
-
   // Calculate the near plane for mouse and spotlight \\\\\\\\\\\\\
 
-  Vector3 p, l, u;
-  p.setX(0); p.setY(0); p.setZ(20); 
-  l.setX(0); l.setY(0); l.setZ(-1); 
-  u.setX(0); u.setY(1); u.setZ(0); 
+  using namespace Globals;
+  Vector3 p, u;
+  p.setX(0); p.setY(0); p.setZ(20);
+  Globals::l.setX(0); Globals::l.setY(0); Globals::l.setZ(-1);
+  u.setX(0); u.setY(1); u.setZ(0);
 
-  Vector3 dir, nc, fc, X, Y, Z;
-  Z = p - l;
-  Z.normalize();
+  Vector3 dir, nc, fc;
+  Globals::Z = p - Globals::l;
+  Globals::Z.normalize();
 
-  X = u.cross(Z);
-  X.normalize();
+  Globals::X = u.cross(Z);
+  Globals::X.normalize();
 
-  Y = Z.cross(X);
-  double nearD = 4.0;
+  Globals::Y = Globals::Z.cross(X);
+  double nearD = -20.0;
   double nh, nw;
-  Z.scale(nearD);
-  nc = p - Z;
+  Globals::Z.scale(nearD);
+  nc = p - Globals::Z;
 
-  double tang = tan(Globals::viewAngle * M_PI / 180 * 0.5);
-  nh = nearD * tang;
-  nw = nh * (Window::width / Window::height);
+  /*double tang = tan(Globals::viewAngle * M_PI / 180 * 0.5);
+  Globals::nh = nearD * tang;*/
 
-  Vector3 ntl, ntr, nbl, nbr;
-  Y.scale(nh);
-  X.scale(nw);
-  ntl = nc + Y - X;
-  ntr = nc + Y + X;
-  nbl = nc - Y - X;
-  nbr = nc - Y + X;
+  // double nw = Globals::nh * (Window::width / Window::height);
+
+  //Vector3 ntl, ntr, nbl, nbr;
+  // Globals::Y.scale(Globals::nh);
+  // Globals::X.scale(nw);
+  /*ntl = nc + Globals::Y - Globals::X;
+  ntr = nc + Globals::Y + Globals::X;
+  nbl = nc - Globals::Y - Globals::X;
+  nbr = nc - Globals::Y + Globals::X;*/
+
+  // Find distance of plane
+  Globals::plane_distance = (Globals::l.dot(nc)) * -1.0;
   ///////////////////////////////////////
 
   Globals::hop_material.setDiffandAmb(0.1, 0.0, 0.0, 1.0);

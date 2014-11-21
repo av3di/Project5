@@ -127,7 +127,6 @@ void Window::trackBallMapping(Vector3 &cp)
 }
 void Window::processMouse(int button, int state, int x, int y)
 {
-	Vector3 direction;
 	static Vector3 last_point;
 	if (state == GLUT_DOWN)
 	{
@@ -148,13 +147,27 @@ void Window::processMouse(int button, int state, int x, int y)
 			if (!trackball_model) // make spotlight point to where mouse is pointing
 			{
 				Vector3 current_point;
-				current_point.setX(x);
-				current_point.setY(y);
-				current_point.setZ(0);
-				trackBallMapping(current_point);
-				if (current_point.getZ() > 0)
-					current_point.setZ(current_point.getZ() * -1.0);
+				current_point.setX(x - (Window::width/2));
+				current_point.setY((y - Window::height / 2) * -1);
+				current_point.setZ(-1.0);
+				/*double distance_to_plane = (Globals::l.dot(current_point)) + Globals::plane_distance;
+				Vector3 plane_normal;
+				plane_normal.setX(Globals::l.getX());
+				plane_normal.setY(Globals::l.getY());
+				plane_normal.setZ(Globals::l.getZ());
+				plane_normal.scale(distance_to_plane);
+				Vector3 projected_near_pt = current_point - plane_normal;*/
+
+				//projected_near_pt.setY(projected_near_pt.getY() * -1.0);
+				//Globals::spot_light.setSpotLightDirection(projected_near_pt);
+				//projected_near_pt.print("new point is");
+
+				//double t = (-1 * ((current_point.dot(Globals::l)) + Globals::plane_distance)) / (current_point.dot(projected_near_pt));
+				/*projected_near_pt.scale(t);
+				projected_near_pt = current_point + projected_near_pt;*/
+				//current_point.setZ(-1.0);
 				Globals::spot_light.setSpotLightDirection(current_point);
+				//current_point.print("new direction is");
 			}
 		}
 	}
