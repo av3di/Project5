@@ -5,6 +5,11 @@ using namespace std;
 int Window::width  = 512;   // set window width in pixels here
 int Window::height = 512;   // set window height in pixels here
 
+bool Window::left_button = false; // tells whether the user clicked the left or right mouse button
+bool Window::trackball_model = true;
+
+int Window::last_x = 0, Window::last_y = 0;
+
 Model *currentM = &Globals::hop;
 bool Window::per_pixel = false;
 int Window::fkey = 1;  // If 1, show bunny, 2->show dragon, 3->show bear
@@ -123,51 +128,92 @@ void Window::trackBallMapping(Vector3 &cp)
 void Window::processMouse(int button, int state, int x, int y)
 {
 	Vector3 direction;
-	static int last_x = 0;
-	static int last_y = 0;
 	static Vector3 last_point;
 	if (state == GLUT_DOWN)
 	{
+		if (button == GLUT_LEFT_BUTTON)
+			left_button = true;
+		else
+			left_button = false;
 		last_x = x;
 		last_y = y;
 		last_point.setX(last_x);
 		last_point.setY(last_y);
 		last_point.setZ(0);
 	}
-	else  // Mouse key has been released
+	else // mouse button released
 	{
-		Vector3 current_point;
-		current_point.setX(x);
-		current_point.setY(y);
-		current_point.setZ(0);
-		trackBallMapping(last_point);
-		trackBallMapping(current_point);
-		if (button == GLUT_LEFT_BUTTON) // Rotation
+		if (button == GLUT_LEFT_BUTTON)
+		{
+			if (!trackball_model) // make spotlight point to where mouse is pointing
+			{
+				Vector3 current_point;
+				current_point.setX(x);
+				current_point.setY(y);
+				current_point.setZ(0);
+				trackBallMapping(current_point);
+				if (current_point.getZ() > 0)
+					current_point.setZ(current_point.getZ() * -1.0);
+				Globals::spot_light.setSpotLightDirection(current_point);
+			}
+		}
+	}
+}
+
+void Window::processMotion(int x, int y)
+{
+	Vector3 direction;
+	Vector3 last_point;
+	Vector3 current_point;
+
+	last_point.setX(last_x);
+	last_point.setY(last_y);
+	last_point.setZ(0);
+
+	current_point.setX(x);
+	current_point.setY(y);
+	current_point.setZ(0);
+
+	trackBallMapping(last_point);
+	trackBallMapping(current_point);
+
+	if (left_button) // Rotation
+	{
+		if (trackball_model) // rotate model
 		{
 			direction = current_point - last_point;
 			double velocity = direction.length();
 			if (velocity > 0.0001)
 			{
 				Vector3 rotation_axis = last_point.cross(current_point);
-				double theta = last_point.dot(current_point);
-				double denominator = last_point.length()*current_point.length();
-				theta = (theta / denominator) * M_PI / 180.0;
-				double rotation_angle = cos(theta); // rotation angle in radians
-				
+				double rotation_angle = velocity * 90.0;
+
 				rotation_axis.normalize();
 				currentM->rotate(rotation_axis, rotation_angle);
 			}
 		}
-		else // Right mouse button for scale
+	}
+	else 
+	{
+		if (trackball_model) // Right mouse button for scale
 		{
 			double diff = current_point.getY() - last_point.getY();
-			double zoom_factor = 1.0 + diff + 0.1;
+			double zoom_factor = 1.0 + diff + 0.0008;
 			currentM->scale(zoom_factor, zoom_factor, zoom_factor);
 		}
+		else // widen or narrow spotlight angle
+		{
+			double diff = current_point.getY() - last_point.getY();
+			double zoom_factor = 1.0 + diff + 0.0008;
+			if (diff < 0)
+				zoom_factor = zoom_factor * -1.0; // narrow the spotlight, if mouse moved down
+			Globals::spot_light.changeOpeningAngle(zoom_factor);
+		}
 	}
-
-
+	last_x = x;
+	last_y = y;
 }
+
 void Window::processNormalKeys(unsigned char key, int x, int y){
 	switch (key){
 	case 27:
@@ -221,5 +267,12 @@ void Window::processNormalKeys(unsigned char key, int x, int y){
 			per_pixel = false;
 		else
 			per_pixel = true;
+		break;
+	case 'm':
+		trackball_model = true;
+		break;
+	case 'l':
+		trackball_model = false;
+		break;
 	}
 }

@@ -1,6 +1,6 @@
 #include "Header.h"
 
-Light::Light(int n_id) : id(n_id)
+Light::Light(int n_id, double deg_angle) : id(n_id), angle_deg(deg_angle)
 {
 }
 
@@ -9,11 +9,23 @@ Light::~Light()
 {
 }
 
-void Light::setSpotLight(double deg_angle, double d_x, double d_y, double d_z)
+void Light::setSpotLight(double d_x, double d_y, double d_z)
 {
-	glLightf(id, GL_SPOT_CUTOFF, deg_angle);
+	glLightf(id, GL_SPOT_CUTOFF, angle_deg);
 	GLfloat spot_direction[] = { d_x, d_y, d_z };
-	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, spot_direction);
+	glLightfv(id, GL_SPOT_DIRECTION, spot_direction);
+}
+
+void Light::setSpotLightDirection(Vector3 &cp)
+{
+	GLfloat spot_direction[] = { cp.getX(), cp.getY(), cp.getZ() };
+	glLightfv(id, GL_SPOT_DIRECTION, spot_direction);
+}
+
+void Light::changeOpeningAngle(double deg_angle)
+{
+	glLightf(id, GL_SPOT_CUTOFF, deg_angle + angle_deg);
+	angle_deg = deg_angle + angle_deg;
 }
 void Light::setColor(double a_r, double a_g, double a_b, double r, double g, double b, double opacity)
 {

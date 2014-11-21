@@ -122,7 +122,7 @@ void Matrix4::identity()
 }
 
 void Matrix4::makeRotate(double angle, const Vector3 &axis){
-	//angle = angle * M_PI / 180.0; // deg to radians
+	angle = angle * M_PI / 180.0; // deg to radians
 	//angle /= 180.0 * M_PI;
 	identity();
 	m[0][0] = cos(angle) + pow(axis.x, 2.0)*(1.0 - cos(angle));

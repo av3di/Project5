@@ -8,8 +8,8 @@ namespace Globals
   Dragon draco;
   Bear little_bear;
 
-  Light point_light(GL_LIGHT0);
-  Light spot_light(GL_LIGHT1);
+  Light point_light(GL_LIGHT0, 180.0); // 180.0 dummy value - not going to be used
+  Light spot_light(GL_LIGHT1, 35);
 
   Material hop_material;
   Material draco_material;
@@ -61,6 +61,40 @@ int main(int argc, char *argv[])
   glutReshapeFunc(Window::reshapeCallback);
   glutIdleFunc(Window::idleCallback);
 
+
+  // Calculate the near plane for mouse and spotlight \\\\\\\\\\\\\
+
+  Vector3 p, l, u;
+  p.setX(0); p.setY(0); p.setZ(20); 
+  l.setX(0); l.setY(0); l.setZ(-1); 
+  u.setX(0); u.setY(1); u.setZ(0); 
+
+  Vector3 dir, nc, fc, X, Y, Z;
+  Z = p - l;
+  Z.normalize();
+
+  X = u.cross(Z);
+  X.normalize();
+
+  Y = Z.cross(X);
+  double nearD = 4.0;
+  double nh, nw;
+  Z.scale(nearD);
+  nc = p - Z;
+
+  double tang = tan(Globals::viewAngle * M_PI / 180 * 0.5);
+  nh = nearD * tang;
+  nw = nh * (Window::width / Window::height);
+
+  Vector3 ntl, ntr, nbl, nbr;
+  Y.scale(nh);
+  X.scale(nw);
+  ntl = nc + Y - X;
+  ntr = nc + Y + X;
+  nbl = nc - Y - X;
+  nbr = nc - Y + X;
+  ///////////////////////////////////////
+
   Globals::hop_material.setDiffandAmb(0.1, 0.0, 0.0, 1.0);
   Globals::hop_material.setSpec(1.0, 0.0, 0.0, 0.0, 20.0);
 
@@ -76,7 +110,7 @@ int main(int argc, char *argv[])
   Globals::point_light.on();
 
 
-  Globals::spot_light.setSpotLight(35, 0.0, 0.0, -1.0);
+  Globals::spot_light.setSpotLight(0.0, 0.0, -1.0); // set direction x, y, z
   Globals::spot_light.setColor(0.25, 0.25, 0.25, 1.0, 1.0, 1.0, 1.0);
   Globals::spot_light.setPosition(8.0, 0.0, 7.0, 1.0);
   Globals::spot_light.on();
@@ -111,6 +145,7 @@ int main(int argc, char *argv[])
   glutKeyboardFunc(Window::processNormalKeys);
   glutSpecialFunc(Window::processSpecialKeys);
   glutMouseFunc(Window::processMouse);
+  glutMotionFunc(Window::processMotion);
 
   glutMainLoop();
 }
