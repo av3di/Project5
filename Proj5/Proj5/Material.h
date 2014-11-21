@@ -1,7 +1,8 @@
 #ifndef _MATERIAL_H_
 #define _MATERIAL_H_
 
-#include "GL/glut.h"
+#include "Header.h"
+
 class Material
 {
 public:

@@ -1,5 +1,4 @@
-#include "Light.h"
-#include "GL\glut.h"
+#include "Header.h"
 
 Light::Light(int n_id) : id(n_id)
 {

@@ -1,5 +1,4 @@
-#include <math.h>
-#include "Matrix4.h"
+#include "Header.h"
 
 Matrix4::Matrix4()
 {

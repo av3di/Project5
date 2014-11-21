@@ -1,6 +1,5 @@
-#include "Vector4.h"
-#include <iostream>
-#include <math.h>
+#include "Header.h"
+
 
 Vector4::Vector4(){
 	x = 0;

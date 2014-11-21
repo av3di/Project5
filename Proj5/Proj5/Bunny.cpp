@@ -1,8 +1,4 @@
-#include "Bunny.h"
-
-#include <GL/glut.h>
-#include <math.h>
-#include "main.h"
+#include "Header.h"
 
 using namespace std;
 

@@ -1,10 +1,7 @@
 #ifndef _MATRIX4_H_
 #define _MATRIX4_H_
-#include "Vector4.h"
-#include "Vector3.h"
-#include <string>
-#include <iostream>
-#define M_PI 3.14159265358979323846
+
+#include "Header.h"
 
 using namespace std;
 class Matrix4

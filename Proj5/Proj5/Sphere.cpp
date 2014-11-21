@@ -1,5 +1,5 @@
-#include "Sphere.h"
-#include "GL\glut.h"
+#include "Header.h"
+
 
 Sphere::Sphere()
 {

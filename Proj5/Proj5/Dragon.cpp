@@ -1,7 +1,4 @@
-#include "Dragon.h"
-
-#include <GL/glut.h>
-#include "main.h"
+#include "Header.h"
 
 using namespace std;
 

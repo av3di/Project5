@@ -1,5 +1,4 @@
-#include "PointModel.h"
-#include "main.h"
+#include "Header.h"
 
 PointModel::PointModel()
 {
@@ -30,9 +29,7 @@ void PointModel::parseFile(const char* filename)
 		for (int row = 0; row < objrows; row++)
 		{ 
 			fscanf_s(objf, "%c", &c1, sizeof(c1));
-			//cout << "grabbed c1 is :" << c1 << endl;
 			c2 = fgetc(objf); 
-			//cout << "grabbed c2 is : " << c2 << endl;
 			if (c1 == 'v' && c2 == ' ') // vertex position and color
 			{
 				fscanf_s(objf, "%lf", &x, sizeof(x));
@@ -54,27 +51,16 @@ void PointModel::parseFile(const char* filename)
 				c_rgb.push_back(r);
 				c_rgb.push_back(g);
 				c_rgb.push_back(b);
-				/*cout << "entered vertex color " << endl;
-				cout << "x: " << x << endl;
-				cout << "y: " << y << endl;
-				cout << "z: " << z << endl;
-				cout << "r: " << r << endl;
-				cout << "g: " << g << endl;
-				cout << "b: " << b << endl;*/
 				fgets(comment, 100, objf);  // get the rest of the line
 			}
 			else if (c1 == 'v' && c2 == 'n') // vertex normal
 			{
-				//cout << "entered normal " << endl;
 				fscanf_s(objf, "%lf", &x, sizeof(x));
 				fscanf_s(objf, "%lf", &y, sizeof(y));
 				fscanf_s(objf, "%lf", &z, sizeof(z));
 				n_xyz.push_back(x);
 				n_xyz.push_back(y);
 				n_xyz.push_back(z);
-				/*cout << "x: " << x << endl;
-				cout << "y: " << y << endl;
-				cout << "z: " << z << endl;*/
 				fgets(comment, 100, objf);  // get the rest of the line
 			}
 			else if (c1 == 'f' && c2 == ' ') // face
@@ -89,14 +75,10 @@ void PointModel::parseFile(const char* filename)
 				faces.push_back(index2);
 				faces.push_back(index3);
 				fgets(comment, 100, objf);  // get the comment line
-			//	cout << "entered face " << endl;
-				// delete[]comment;
 			}
 			else if (c1 == '#') // Comment
 			{
 				fgets(comment, 100, objf);  // get the comment line
-			//	cout << "entered comment " << endl;
-				//delete []comment;
 			}
 			//getchar();
 		}

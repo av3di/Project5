@@ -1,32 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <iostream>
-
-#include <GL/glut.h>
-
-#include "Window.h"
-#include "Cube.h"
-#include "Matrix4.h"
-#include "main.h"
-#include "vector3.h"
-#include "Vector4.h"
-#include "Camera.h"
-#include "House.h"
-#include "Bunny.h"
-#include "Dragon.h"
-#include "Bear.h"
-#include "Light.h"
-#include "Sphere.h"
-#include "Material.h"
+#include "Header.h"
 
 using namespace std;
 
 namespace Globals
 {
-  Cube cube;
-  Camera cam1;
-  Camera cam2;
-  House h;
   Bunny hop;
   Dragon draco;
   Bear little_bear;
@@ -105,10 +82,6 @@ int main(int argc, char *argv[])
   Globals::spot_light.on();
 
   // Initialize all matrices:
-  Globals::cube.getMatrix().identity();
-  Globals::cam1.getMatrix().identity();
-  Globals::cam2.getMatrix().identity();
-  Globals::h.getMatrix().identity();
   Globals::hop.getMatrix().identity();
   Globals::draco.getMatrix().identity();
   Globals::little_bear.getMatrix().identity();
@@ -133,21 +106,6 @@ int main(int argc, char *argv[])
 
   Globals::little_bear.moveToOrigin();
   Globals::little_bear.fitToWindow();
-
-  // Construct the F1 Camera
-  Globals::cam1.sete(0, 10, 10);
-  Globals::cam1.setd(0, 0, 0);
-  Globals::cam1.setup(0, 1, 0);
-  Globals::cam1.constructMatrix();
-  Globals::cam1.inverse();
-
-  // Construct the F2 Camera
-  Globals::cam2.sete(-15, 5, 10);
-  Globals::cam2.setd(-5, 0, 0);
-  Globals::cam2.setup(0, 1, 0.5);
-
-  Globals::cam2.constructMatrix();
-  Globals::cam2.inverse();
 
   // Process the keys pressed
   glutKeyboardFunc(Window::processNormalKeys);

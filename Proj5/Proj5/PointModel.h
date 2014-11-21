@@ -1,10 +1,7 @@
 #ifndef _POINTMODEL_H_
 #define _POINTMODEL_H_
 
-#include "Model.h"
-#include <vector>
-#include <string>
-#include <array>
+#include "Header.h"
 
 class PointModel : public Model
 {

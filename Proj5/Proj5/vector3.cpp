@@ -1,6 +1,4 @@
-#include "Vector3.h"
-#include <iostream>
-#include <math.h>
+#include "Header.h"
 
 Vector3::Vector3(){
 	x = 0;

@@ -1,13 +1,4 @@
-#include <stdio.h>
-#include <iostream>
-#include <GL/glut.h>
-
-#include "Window.h"
-#include "Cube.h"
-#include "Matrix4.h"
-#include "main.h"
-#include "Camera.h"
-#include "House.h"
+#include "Header.h"
 
 using namespace std;
 
@@ -22,8 +13,6 @@ int Window::fkey = 1;  // If 1, show bunny, 2->show dragon, 3->show bear
 // Callback method called when system is idle.
 void Window::idleCallback()
 {
-	//Globals::hop.spin(0.5);
-	//Globals::draco.spin(0.5);
 	displayCallback();         // call display routine to show the cube
 }
 
@@ -155,25 +144,17 @@ void Window::processMouse(int button, int state, int x, int y)
 		trackBallMapping(current_point);
 		if (button == GLUT_LEFT_BUTTON) // Rotation
 		{
-
 			direction = current_point - last_point;
 			double velocity = direction.length();
 			if (velocity > 0.0001)
 			{
-				last_point.print("last_point: ");
-				current_point.print("current_point: ");
-				
 				Vector3 rotation_axis = last_point.cross(current_point);
 				double theta = last_point.dot(current_point);
 				double denominator = last_point.length()*current_point.length();
 				theta = (theta / denominator) * M_PI / 180.0;
 				double rotation_angle = cos(theta); // rotation angle in radians
 				
-				//rotation_axis.print("raxis: ");
 				rotation_axis.normalize();
-				/*rotation_axis.setX(0);
-				rotation_axis.setY(1);
-				rotation_axis.setZ(0);*/
 				currentM->rotate(rotation_axis, rotation_angle);
 			}
 		}
@@ -188,12 +169,6 @@ void Window::processMouse(int button, int state, int x, int y)
 
 }
 void Window::processNormalKeys(unsigned char key, int x, int y){
-	/*if (fkey == 1)
-		currentM = &Globals::hop;
-	else if (fkey == 2)
-		currentM = &Globals::draco;
-	else if (fkey == 3)
-		currentM = &Globals::little_bear;*/
 	switch (key){
 	case 27:
 		exit(0);

@@ -1,5 +1,4 @@
-#include "Material.h"
-#include "GL\glut.h"
+#include "Header.h"
 
 Material::Material()
 {

@@ -68,10 +68,7 @@
   <ItemGroup>
     <ClCompile Include="Bear.cpp" />
     <ClCompile Include="Bunny.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="cube.cpp" />
     <ClCompile Include="Dragon.cpp" />
-    <ClCompile Include="House.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
@@ -86,10 +83,8 @@
   <ItemGroup>
     <ClInclude Include="Bear.h" />
     <ClInclude Include="Bunny.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="cube.h" />
     <ClInclude Include="Dragon.h" />
-    <ClInclude Include="House.h" />
+    <ClInclude Include="Header.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Material.h" />

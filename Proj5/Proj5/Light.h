@@ -1,6 +1,8 @@
 #ifndef _LIGHT_H_
 #define _LIGHT_H_
 
+#include "Header.h"
+
 class Light
 {
 public:

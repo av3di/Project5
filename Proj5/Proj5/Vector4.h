@@ -1,6 +1,6 @@
 #ifndef _VECTOR4_H_
 #define _VECTOR4_H_
-#include <string>
+#include "Header.h"
 
 class Vector4
 {

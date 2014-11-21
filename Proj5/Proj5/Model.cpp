@@ -1,7 +1,4 @@
-#include "Model.h"
-#include "Cube.h"
-#include "Matrix4.h"
-#include <GL/glut.h>
+#include "Header.h"
 
 using namespace std;
 
@@ -29,7 +26,6 @@ void Model::rotate(Vector3 rotation_axis, double deg_angle)
 {
 	Matrix4 *rotation = new Matrix4();
 	rotation->makeRotate(deg_angle, rotation_axis);
-	rotation->print("rotation matrix: ");
 	model2world = *rotation * model2world;
 }
 
