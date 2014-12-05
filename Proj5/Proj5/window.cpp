@@ -207,7 +207,10 @@ void Window::displayCallback()
 	//v_pts.push_back(new_vpts);
 	u_index += 4;
   }
-
+  Vector3 normal;
+  Vector3 dist_1;
+  Vector3 dist_2;
+  Vector4 tmp;
   glBegin(GL_QUADS);
   for (int i = 0; i < 99; i++) {
 	  for (int j = 0; j < 99; j++) {
@@ -215,17 +218,59 @@ void Window::displayCallback()
 		  Vector4 ptb = v_vector[(i * 100) + j + 1];
 		  Vector4 ptc = v_vector[((i + 1) * 100) + j + 1];
 		  Vector4 ptd = v_vector[((i + 1) * 100) + j];
-		  glColor3f((rand() % 10) / 10.0, (rand() % 10) / 10.0, (rand() % 10) / 10.0);
+		  
+		  tmp = pta - ptb;
+		  dist_1.setX(tmp.getX()); dist_1.setY(tmp.getY()); dist_1.setZ(tmp.getZ());
+		  tmp = pta - ptd;
+		  dist_2.setX(tmp.getX()); dist_2.setY(tmp.getY()); dist_2.setZ(tmp.getZ());
+		  normal = dist_1.cross(dist_2);
+		  normal.normalize();
+		  if (normal.y < 0)
+			  normal.y = normal.y * -1;
+
+		  glColor3f(1, 1, 1);
+		  glNormal3d(normal.x, normal.y, normal.z);
 		  glVertex3f(pta.x, pta.y, pta.z);
-		  glColor3f((rand() % 10) / 10.0, (rand() % 10) / 10.0, (rand() % 10) / 10.0);
+
+		  tmp = pta - ptb;
+		  dist_1.setX(tmp.getX()); dist_1.setY(tmp.getY()); dist_1.setZ(tmp.getZ());
+		  tmp = ptb - ptc;
+		  dist_2.setX(tmp.getX()); dist_2.setY(tmp.getY()); dist_2.setZ(tmp.getZ());
+		  normal = dist_1.cross(dist_2);
+		  normal.normalize();
+		  if (normal.y < 0)
+			  normal.y = normal.y * -1;
+
+		  glColor3f(1, 1, 1);
+		  glNormal3d(normal.x, normal.y, normal.z);
 		  glVertex3f(ptb.x, ptb.y, ptb.z);
-		  glColor3f((rand() % 10) / 10.0, (rand() % 10) / 10.0, (rand() % 10) / 10.0);
+
+		  tmp = ptb - ptc;
+		  dist_1.setX(tmp.getX()); dist_1.setY(tmp.getY()); dist_1.setZ(tmp.getZ());
+		  tmp = ptc - ptd;
+		  dist_2.setX(tmp.getX()); dist_2.setY(tmp.getY()); dist_2.setZ(tmp.getZ());
+		  normal = dist_1.cross(dist_2);
+		  normal.normalize();
+
+		  if (normal.y < 0)
+			  normal.y = normal.y * -1;
+		  glColor3f(1, 1, 1);
+		  glNormal3d(normal.x, normal.y, normal.z);
 		  glVertex3f(ptc.x, ptc.y, ptc.z);
-		  glColor3f((rand() % 10) / 10.0, (rand() % 10) / 10.0, (rand() % 10) / 10.0);
+
+		  tmp = ptc - ptd;
+		  dist_1.setX(tmp.getX()); dist_1.setY(tmp.getY()); dist_1.setZ(tmp.getZ());
+		  tmp = ptd - pta;
+		  dist_2.setX(tmp.getX()); dist_2.setY(tmp.getY()); dist_2.setZ(tmp.getZ());
+		  normal = dist_1.cross(dist_2);
+		  normal.normalize();
+
+		  if (normal.y < 0)
+			  normal.y = normal.y * -1;
+		  glColor3f(1, 1, 1);
+		  glNormal3d(normal.x, normal.y, normal.z);
 		  glVertex3f(ptd.x, ptd.y, ptd.z);
-
 	  }
-
   }
   /*glBegin(GL_POINTS);
   for (int j = 0; j < v_vector.size(); j++) {

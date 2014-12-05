@@ -149,6 +149,9 @@ int main(int argc, char *argv[])
   Globals::little_bear.moveToOrigin();
   Globals::little_bear.fitToWindow();
   */
+  Globals::point_light.setColor(0.0, 0.0, 0.25, 0.0, 0.0, 1.0, 1.0);
+  Globals::point_light.setPosition(1.0, 1.0, 1.0, 1.0);
+  Globals::point_light.on();
   // Process the keys pressed
   glutKeyboardFunc(Window::processNormalKeys);
   glutSpecialFunc(Window::processSpecialKeys);
