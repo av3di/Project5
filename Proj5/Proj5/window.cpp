@@ -14,24 +14,31 @@ Model *currentM = &Globals::hop;
 bool Window::per_pixel = false;
 int Window::fkey = 1;  // If 1, show bunny, 2->show dragon, 3->show bear
 
-Vector3 cp_0(-2, 0, 1);
-Vector3 cp_1(-2, 0, 2);
-Vector3 cp_2(-1, 0, 1);
-Vector3 cp_3(-1, 0, 2);
-Vector3 cp_4(1, 0, 1);
-Vector3 cp_5(1, 0, 2);
-Vector3 cp_6(2, 0, 1);
-Vector3 cp_7(2, 0, 2);
+GLfloat ctrlpoints[16][3] = {
+	{ -12, 0, -12 }, { -4, 0, -12 }, { 4, 0, -12 }, { 12, 0, -12 },
+	{ -12, 0, -04 }, { -4, 0, -04 }, { 4, 0, -04 }, { 12, 0, -04 },
+	{ -12, 0, 04 }, { -4, 0, 04 }, { 4, 0, 04 }, { 12, 0, 04 },
+	{ -12, 0, 12 }, { -4, 0, 12 }, { 4, 0, 12 }, { 12, 0, 12 },
+};
+
+Vector3 cp_0(-2, 0, 2);
+Vector3 cp_1(-1, 0, 2);
+Vector3 cp_2(1, 0, 2);
+Vector3 cp_3(2, 0, 2);
+Vector3 cp_4(-2, 0, 1);
+Vector3 cp_5(-1, 0, 1);
+Vector3 cp_6(1, 0, 1);
+Vector3 cp_7(2, 0, 1);
 Vector3 cp_8(-2, 0, -1);
-Vector3 cp_9(-2, 0, -2);
-Vector3 cp_10(-1, 0, -1);
-Vector3 cp_11(-1, 0, -2);
-Vector3 cp_12(1, 0, -1);
-Vector3 cp_13(1, 0, -2);
-Vector3 cp_14(2, 0, -1);
+Vector3 cp_9(-1, 0, -1);
+Vector3 cp_10(1, 0, -1);
+Vector3 cp_11(2, 0, -1);
+Vector3 cp_12(-2, 0, -2);
+Vector3 cp_13(-1, 0, -2);
+Vector3 cp_14(1, 0, -2);
 Vector3 cp_15(2, 0, -2);
 
-double control_points[] = { -2, 0, 1, -2, 0, 2, -1, 0, 1, -1, 0, 2, 1, 0, 1, 1, 0, 2, 2, 0, 1, 2, 0, 2, -2, 0, -1, -2, 0, -2, -1, 0, -1, -1, 0, -2, 1, 0, -1, 1, 0, -2, 2, 0, -1, 2, 0, -2 };
+double control_points[] = { -2, 0, 2, -1, 0, 2, 1, 0, 2, 2, 0, 2, -2, 0, 1, -1, 0, 1, 1, 0, 1, 2, 0, 1, -2, 0, -1, -1, 0, -1, 1, 0, -1, 2, 0, -1, -2, 0, -2, -1, 0, -2, 1, 0, -2, 2, 0, -2 };
 
 //----------------------------------------------------------------------------
 // Callback method called when system is idle.
@@ -73,7 +80,7 @@ void Window::reshapeCallback(int w, int h)
   glLoadIdentity();
   gluPerspective(Globals::viewAngle, double(width)/(double)height, 1.0, 1000.0); // set perspective projection viewing frustum
   //glTranslatef(0, 0, Globals::camZ);    // move camera back 20 units so that it looks at the origin (or else it's in the origin)
-  gluLookAt(0, 30, 0, 0, 0, 0, 0, 0, 90);
+  gluLookAt(0, 5, 0, 0, 0, 0, 0, 0, 90);
   glMatrixMode(GL_MODELVIEW);
 }
 
@@ -119,12 +126,12 @@ void Window::displayCallback()
   glMatrixMode(GL_MODELVIEW);  // make sure we're in Modelview mode
   Matrix4 glmatrix;
 
-  //Setup the control point matrix
   Matrix4 Mp0;
   Mp0.setRow(0, cp_0.x, cp_1.x, cp_2.x, cp_3.x);
   Mp0.setRow(1, cp_0.y, cp_1.y, cp_2.y, cp_3.y);
   Mp0.setRow(2, cp_0.z, cp_1.z, cp_2.z, cp_3.z);
   Mp0.setRow(3, 0.0, 0.0, 0.0, 0.0);
+
 
   //Setup the control point matrix
   Matrix4 Mp1;
@@ -146,69 +153,84 @@ void Window::displayCallback()
   Mp3.setRow(1, cp_12.y, cp_13.y, cp_14.y, cp_15.y);
   Mp3.setRow(2, cp_12.z, cp_13.z, cp_14.z, cp_15.z);
   Mp3.setRow(3, 0.0, 0.0, 0.0, 0.0);
-  Vector4 q[404];
+  Vector4 u[404];
+  std::vector<Vector4> v_vector;
   Vector4 C0;
   Vector4 C1;
   Vector4 C2;
   Vector4 C3;
   //Pick a time t
-  int q_index = 0;
+  int u_index = 0;
   for (double t = 0.0; t <= 1; t += 0.01) //u
   {
-	  //Create a vector with our Bernstein coefficients
-	  C0.setX(bernstizzlesCoeff(3, 0, t));
-	  C0.setY(bernstizzlesCoeff(3, 1, t));
-	  C0.setZ(bernstizzlesCoeff(3, 2, t));
-	  C0.setW(bernstizzlesCoeff(3, 3, t));
+		  //Create a vector with our Bernstein coefficients
+		  C0.setX(bernstizzlesCoeff(3, 0, t));
+		  C0.setY(bernstizzlesCoeff(3, 1, t));
+		  C0.setZ(bernstizzlesCoeff(3, 2, t));
+		  C0.setW(bernstizzlesCoeff(3, 3, t));
 
-	  //C0.print("C0");
-	  //getchar();
-	  C1.setX(bernstizzlesCoeff(3, 4, t));
-	  C1.setY(bernstizzlesCoeff(3, 5, t));
-	  C1.setZ(bernstizzlesCoeff(3, 6, t));
-	  C1.setW(bernstizzlesCoeff(3, 7, t));
+		  //Calculate the final points q
+		  u[u_index] = Mp0 * C0;
+		  u[u_index + 1] = Mp1 * C0;
+		  u[u_index + 2] = Mp2 * C0;
+		  u[u_index + 3] = Mp3 * C0;
 
-	  C2.setX(bernstizzlesCoeff(3, 8, t));
-	  C2.setY(bernstizzlesCoeff(3, 9, t));
-	  C2.setZ(bernstizzlesCoeff(3, 10, t));
-	  C2.setW(bernstizzlesCoeff(3, 11, t));
+		  //And make sure q is a point by setting its w-component to 1
+		  u[u_index].w = 1.0;
+		  u[u_index + 1].w = 1.0;
+		  u[u_index + 2].w = 1.0;
+		  u[u_index + 3].w = 1.0;
 
-	  C3.setX(bernstizzlesCoeff(3, 12, t));
-	  C3.setY(bernstizzlesCoeff(3, 13, t));
-	  C3.setZ(bernstizzlesCoeff(3, 14, t));
-	  C3.setW(bernstizzlesCoeff(3, 15, t));
-	  Mp0.print("Mp0");
-	  Mp1.print("Mp1");
-	  Mp2.print("Mp2");
-	  Mp3.print("Mp3");
-	  //getchar();
-	  //Calculate the final points q
-	  q[q_index] = Mp0 * C0;
-	  q[q_index + 1] = Mp1 * C1;
-	  q[q_index + 2] = Mp2 * C2;
-	  q[q_index + 3] = Mp3 * C3;
+          for (double v = 0; v <= 1.0; v += 0.01) 
+		  {
 
-	  //And make sure q is a point by setting its w-component to 1
-	  q[q_index].w = 1.0;
-	  q[q_index + 1].w = 1.0;
-	  q[q_index + 2].w = 1.0;
-	  q[q_index + 3].w = 1.0;
+			Vector4 p0(u[u_index].x, u[u_index].y, u[u_index].z, 1);
+			Vector4 p1(u[u_index + 1].x, u[u_index + 1].y, u[u_index + 1].z, 1);
+			Vector4 p2(u[u_index + 2].x, u[u_index + 2].y, u[u_index + 2].z, 1);
+			Vector4 p3(u[u_index + 3].x, u[u_index + 3].y, u[u_index + 3].z, 1);
+			Matrix4 Mpv;
+			Mpv.setRow(0, p0.x, p1.x, p2.x, p3.x);
+			Mpv.setRow(1, p0.y, p1.y, p2.y, p3.y);
+			Mpv.setRow(2, p0.z, p1.z, p2.z, p3.z);
+			Mpv.setRow(3, 0.0, 0.0, 0.0, 0.0);
 
-	  q_index += 4;
+			//Create a vector with our Bernstein coefficients
+			Vector4 C(bernstizzlesCoeff(3, 0, v),
+				bernstizzlesCoeff(3, 1, v),
+				bernstizzlesCoeff(3, 2, v),
+				bernstizzlesCoeff(3, 3, v));
+			//Calculate the final point q
+			Vector4 q = Mpv * C;
+			q.w = 1.0;
+			v_vector.push_back(q);
+		}
+	//v_pts.push_back(new_vpts);
+	u_index += 4;
   }
 
-  for (int index = 0; index < 404; index++)
-  {
-	  q[index].print("");
+  glBegin(GL_QUADS);
+  for (int i = 0; i < 99; i++) {
+	  for (int j = 0; j < 99; j++) {
+		  Vector4 pta = v_vector[(i * 100) + j];
+		  Vector4 ptb = v_vector[(i * 100) + j + 1];
+		  Vector4 ptc = v_vector[((i + 1) * 100) + j + 1];
+		  Vector4 ptd = v_vector[((i + 1) * 100) + j];
+		  glColor3f((rand() % 10) / 10.0, (rand() % 10) / 10.0, (rand() % 10) / 10.0);
+		  glVertex3f(pta.x, pta.y, pta.z);
+		  glColor3f((rand() % 10) / 10.0, (rand() % 10) / 10.0, (rand() % 10) / 10.0);
+		  glVertex3f(ptb.x, ptb.y, ptb.z);
+		  glColor3f((rand() % 10) / 10.0, (rand() % 10) / 10.0, (rand() % 10) / 10.0);
+		  glVertex3f(ptc.x, ptc.y, ptc.z);
+		  glColor3f((rand() % 10) / 10.0, (rand() % 10) / 10.0, (rand() % 10) / 10.0);
+		  glVertex3f(ptd.x, ptd.y, ptd.z);
+
+	  }
+
   }
-  getchar();
-  Vector3 normal;
-  glBegin(GL_POINTS);
-  for (int index = 0;index < 404; index++)
-  {
-	  glColor3d(1, 1, 1);
-	  glVertex3d(q[index].x, q[index].y, q[index].z);
-  }
+  /*glBegin(GL_POINTS);
+  for (int j = 0; j < v_vector.size(); j++) {
+	glVertex3f(v_vector[j].x, v_vector[j].y, v_vector[j].z);
+  }*/
   glEnd();
   glFlush();
   glutSwapBuffers();
