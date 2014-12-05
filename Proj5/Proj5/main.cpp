@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
   // Calculate the near plane for mouse and spotlight \\\\\\\\\\\\\
 
   using namespace Globals;
-  Vector3 p, u;
+ /* Vector3 p, u;
   p.setX(0); p.setY(0); p.setZ(20);
   Globals::l.setX(0); Globals::l.setY(0); Globals::l.setZ(-1);
   u.setX(0); u.setY(1); u.setZ(0);
@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
   double nearD = -20.0;
   double nh, nw;
   Globals::Z.scale(nearD);
-  nc = p - Globals::Z;
+  nc = p - Globals::Z;*/
 
   /*double tang = tan(Globals::viewAngle * M_PI / 180 * 0.5);
   Globals::nh = nearD * tang;*/
@@ -100,10 +100,10 @@ int main(int argc, char *argv[])
   nbr = nc - Globals::Y + Globals::X;*/
 
   // Find distance of plane
-  Globals::plane_distance = (Globals::l.dot(nc)) * -1.0;
+  //Globals::plane_distance = (Globals::l.dot(nc)) * -1.0;
   ///////////////////////////////////////
 
-  Globals::hop_material.setDiffandAmb(0.1, 0.0, 0.0, 1.0);
+  /*Globals::hop_material.setDiffandAmb(0.1, 0.0, 0.0, 1.0);
   Globals::hop_material.setSpec(1.0, 0.0, 0.0, 0.0, 20.0);
 
   Globals::draco_material.setDiffandAmb(0.3, 0.0, 0.3, 1.0);
@@ -148,7 +148,7 @@ int main(int argc, char *argv[])
 
   Globals::little_bear.moveToOrigin();
   Globals::little_bear.fitToWindow();
-
+  */
   // Process the keys pressed
   glutKeyboardFunc(Window::processNormalKeys);
   glutSpecialFunc(Window::processSpecialKeys);

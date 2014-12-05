@@ -50,17 +50,18 @@ Matrix4 Matrix4::operator*(const Matrix4 &m2){
 
 Vector4 Matrix4::operator*(const Vector4& v){
 	Vector4 temp;
-	temp.need[0] = v.x;
-	temp.need[1] = v.y;
-	temp.need[2] = v.z;
-	temp.need[3] = v.w;
-	Vector4 result;
-	for (int i = 0; i < 4; i++){
-		for (int j = 0; j < 4; j++){
-			result.need[i] = (m[i][j] * temp.need[j]);
+	double v_vals[4] = { v.x, v.y, v.z, v.w };
+	double res[4] = { 0, 0, 0, 0 };
+	for (int row = 0; row < 4; row++)
+	{
+		double result = 0;
+		for (int i = 0; i < 4; i++)
+		{
+			result += m[row][i] * v_vals[i];
 		}
+		res[row] = result;
 	}
-	return result;
+	return Vector4(res[0], res[1], res[2], res[3]);
 }
 
 void Matrix4::makeRotateX(double angle){

@@ -14,6 +14,25 @@ Model *currentM = &Globals::hop;
 bool Window::per_pixel = false;
 int Window::fkey = 1;  // If 1, show bunny, 2->show dragon, 3->show bear
 
+Vector3 cp_0(-2, 0, 1);
+Vector3 cp_1(-2, 0, 2);
+Vector3 cp_2(-1, 0, 1);
+Vector3 cp_3(-1, 0, 2);
+Vector3 cp_4(1, 0, 1);
+Vector3 cp_5(1, 0, 2);
+Vector3 cp_6(2, 0, 1);
+Vector3 cp_7(2, 0, 2);
+Vector3 cp_8(-2, 0, -1);
+Vector3 cp_9(-2, 0, -2);
+Vector3 cp_10(-1, 0, -1);
+Vector3 cp_11(-1, 0, -2);
+Vector3 cp_12(1, 0, -1);
+Vector3 cp_13(1, 0, -2);
+Vector3 cp_14(2, 0, -1);
+Vector3 cp_15(2, 0, -2);
+
+double control_points[] = { -2, 0, 1, -2, 0, 2, -1, 0, 1, -1, 0, 2, 1, 0, 1, 1, 0, 2, 2, 0, 1, 2, 0, 2, -2, 0, -1, -2, 0, -2, -1, 0, -1, -1, 0, -2, 1, 0, -1, 1, 0, -2, 2, 0, -1, 2, 0, -2 };
+
 //----------------------------------------------------------------------------
 // Callback method called when system is idle.
 void Window::idleCallback()
@@ -26,7 +45,7 @@ void Window::idleCallback()
 void Window::processSpecialKeys(int key, int x, int y)
 {
 	glMatrixMode(GL_MODELVIEW);  // make sure we're in Modelview mode
-	switch (key) {
+	switch (key) {/*
 	case GLUT_KEY_F1:
 		Window::fkey = 1;
 		currentM = &Globals::hop;
@@ -38,7 +57,7 @@ void Window::processSpecialKeys(int key, int x, int y)
 	case GLUT_KEY_F3:
 		Window::fkey = 3;
 		currentM = &Globals::little_bear;
-		break;
+		break;*/
 	}
 }
 
@@ -53,11 +72,46 @@ void Window::reshapeCallback(int w, int h)
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   gluPerspective(Globals::viewAngle, double(width)/(double)height, 1.0, 1000.0); // set perspective projection viewing frustum
-  glTranslatef(0, 0, Globals::camZ);    // move camera back 20 units so that it looks at the origin (or else it's in the origin)
+  //glTranslatef(0, 0, Globals::camZ);    // move camera back 20 units so that it looks at the origin (or else it's in the origin)
+  gluLookAt(0, 30, 0, 0, 0, 0, 0, 0, 90);
   glMatrixMode(GL_MODELVIEW);
 }
 
 //----------------------------------------------------------------------------
+
+double Window::bernstizzlesCoeff(long n, long i, double t)
+{
+	//long n: is the degree of our curve, in the case of a cubic curve it is 3
+	//long i: the index of the Bernstein coefficient and the control point
+	//double t: is the time we are evaluating at
+
+	//Calculate the Bernstein coefficient
+	return combo(n, i) * pow(1.0 - t, n - i) * pow(t, i);
+}
+
+long Window::combo(long n, long i)
+{
+	//C(n, i) = n! / ((n-1)! * i!)
+	return factorial(n) / (factorial(n - i) * factorial(i));
+}
+
+long Window::factorial(long n)
+{
+	long result = 1;
+
+	//If n is 0, by definition 0! is equal to 1
+	if (n <= 0)
+		return result;
+
+	//Calculate the factorial, n * n-1 * n-2 * ... * 1
+	for (long i = n; i > 0; --i)
+	{
+		result *= i;
+	}
+
+	return result;
+}
+
 // Callback method called by GLUT when window readraw is necessary or when glutPostRedisplay() was called.
 void Window::displayCallback()
 {
@@ -65,7 +119,103 @@ void Window::displayCallback()
   glMatrixMode(GL_MODELVIEW);  // make sure we're in Modelview mode
   Matrix4 glmatrix;
 
-  if (per_pixel)
+  //Setup the control point matrix
+  Matrix4 Mp0;
+  Mp0.setRow(0, cp_0.x, cp_1.x, cp_2.x, cp_3.x);
+  Mp0.setRow(1, cp_0.y, cp_1.y, cp_2.y, cp_3.y);
+  Mp0.setRow(2, cp_0.z, cp_1.z, cp_2.z, cp_3.z);
+  Mp0.setRow(3, 0.0, 0.0, 0.0, 0.0);
+
+  //Setup the control point matrix
+  Matrix4 Mp1;
+  Mp1.setRow(0, cp_4.x, cp_5.x, cp_6.x, cp_7.x);
+  Mp1.setRow(1, cp_4.y, cp_5.y, cp_6.y, cp_7.y);
+  Mp1.setRow(2, cp_4.z, cp_5.z, cp_6.z, cp_7.z);
+  Mp1.setRow(3, 0.0, 0.0, 0.0, 0.0);
+
+  //Setup the control point matrix
+  Matrix4 Mp2;
+  Mp2.setRow(0, cp_8.x, cp_9.x, cp_10.x, cp_11.x);
+  Mp2.setRow(1, cp_8.y, cp_9.y, cp_10.y, cp_11.y);
+  Mp2.setRow(2, cp_8.z, cp_9.z, cp_10.z, cp_11.z);
+  Mp2.setRow(3, 0.0, 0.0, 0.0, 0.0);
+
+  //Setup the control point matrix
+  Matrix4 Mp3;
+  Mp3.setRow(0, cp_12.x, cp_13.x, cp_14.x, cp_15.x);
+  Mp3.setRow(1, cp_12.y, cp_13.y, cp_14.y, cp_15.y);
+  Mp3.setRow(2, cp_12.z, cp_13.z, cp_14.z, cp_15.z);
+  Mp3.setRow(3, 0.0, 0.0, 0.0, 0.0);
+  Vector4 q[404];
+  Vector4 C0;
+  Vector4 C1;
+  Vector4 C2;
+  Vector4 C3;
+  //Pick a time t
+  int q_index = 0;
+  for (double t = 0.0; t <= 1; t += 0.01) //u
+  {
+	  //Create a vector with our Bernstein coefficients
+	  C0.setX(bernstizzlesCoeff(3, 0, t));
+	  C0.setY(bernstizzlesCoeff(3, 1, t));
+	  C0.setZ(bernstizzlesCoeff(3, 2, t));
+	  C0.setW(bernstizzlesCoeff(3, 3, t));
+
+	  //C0.print("C0");
+	  //getchar();
+	  C1.setX(bernstizzlesCoeff(3, 4, t));
+	  C1.setY(bernstizzlesCoeff(3, 5, t));
+	  C1.setZ(bernstizzlesCoeff(3, 6, t));
+	  C1.setW(bernstizzlesCoeff(3, 7, t));
+
+	  C2.setX(bernstizzlesCoeff(3, 8, t));
+	  C2.setY(bernstizzlesCoeff(3, 9, t));
+	  C2.setZ(bernstizzlesCoeff(3, 10, t));
+	  C2.setW(bernstizzlesCoeff(3, 11, t));
+
+	  C3.setX(bernstizzlesCoeff(3, 12, t));
+	  C3.setY(bernstizzlesCoeff(3, 13, t));
+	  C3.setZ(bernstizzlesCoeff(3, 14, t));
+	  C3.setW(bernstizzlesCoeff(3, 15, t));
+	  Mp0.print("Mp0");
+	  Mp1.print("Mp1");
+	  Mp2.print("Mp2");
+	  Mp3.print("Mp3");
+	  //getchar();
+	  //Calculate the final points q
+	  q[q_index] = Mp0 * C0;
+	  q[q_index + 1] = Mp1 * C1;
+	  q[q_index + 2] = Mp2 * C2;
+	  q[q_index + 3] = Mp3 * C3;
+
+	  //And make sure q is a point by setting its w-component to 1
+	  q[q_index].w = 1.0;
+	  q[q_index + 1].w = 1.0;
+	  q[q_index + 2].w = 1.0;
+	  q[q_index + 3].w = 1.0;
+
+	  q_index += 4;
+  }
+
+  for (int index = 0; index < 404; index++)
+  {
+	  q[index].print("");
+  }
+  getchar();
+  Vector3 normal;
+  glBegin(GL_POINTS);
+  for (int index = 0;index < 404; index++)
+  {
+	  glColor3d(1, 1, 1);
+	  glVertex3d(q[index].x, q[index].y, q[index].z);
+  }
+  glEnd();
+  glFlush();
+  glutSwapBuffers();
+
+
+
+  /*if (per_pixel)
 	  Globals::point_light.off();
   else
 	  Globals::point_light.on();
@@ -107,11 +257,13 @@ void Window::displayCallback()
 	  Globals::little_bear_material.on();
 	  glLoadMatrixd(glmatrix.getPointer());
 	  Globals::little_bear.draw();
-  }
+  }*/
 }
 
+
+
 void Window::trackBallMapping(Vector3 &cp)
-{
+{/*
 	Vector3 copy;
 	double d_height = height;
 	double d_width = width;
@@ -123,10 +275,10 @@ void Window::trackBallMapping(Vector3 &cp)
 	d = cp.length();
 	d = (d < 1.0) ? d : 1.0;
 	cp.setZ(sqrt(1.001 - d * d));
-	cp.normalize();
+	cp.normalize();*/
 }
 void Window::processMouse(int button, int state, int x, int y)
-{
+{/*
 	static Vector3 last_point;
 	if (state == GLUT_DOWN)
 	{
@@ -147,7 +299,7 @@ void Window::processMouse(int button, int state, int x, int y)
 			if (!trackball_model) // make spotlight point to where mouse is pointing
 			{
 				Vector3 current_point;
-				current_point.setX(x - (Window::width/2));
+				current_point.setX(x - (Window::width / 2));
 				current_point.setY((y - Window::height / 2) * -1);
 				current_point.setZ(-1.0);
 				/*double distance_to_plane = (Globals::l.dot(current_point)) + Globals::plane_distance;
@@ -166,15 +318,15 @@ void Window::processMouse(int button, int state, int x, int y)
 				/*projected_near_pt.scale(t);
 				projected_near_pt = current_point + projected_near_pt;*/
 				//current_point.setZ(-1.0);
-				Globals::spot_light.setSpotLightDirection(current_point);
+			/*	Globals::spot_light.setSpotLightDirection(current_point);
 				//current_point.print("new direction is");
 			}
 		}
-	}
+	}*/
 }
 
 void Window::processMotion(int x, int y)
-{
+{/*
 	Vector3 direction;
 	Vector3 last_point;
 	Vector3 current_point;
@@ -224,13 +376,13 @@ void Window::processMotion(int x, int y)
 		}
 	}
 	last_x = x;
-	last_y = y;
+	last_y = y;*/
 }
 
 void Window::processNormalKeys(unsigned char key, int x, int y){
 	switch (key){
 	case 27:
-		exit(0);
+		exit(0);/*
 		break;
 	case 't':
 		currentM->changeCounter();
@@ -286,6 +438,7 @@ void Window::processNormalKeys(unsigned char key, int x, int y){
 		break;
 	case 'l':
 		trackball_model = false;
-		break;
+		break;*/
 	}
 }
+
