@@ -5,21 +5,11 @@ using namespace std;
 int Window::width  = 512;   // set window width in pixels here
 int Window::height = 512;   // set window height in pixels here
 
-bool Window::left_button = false; // tells whether the user clicked the left or right mouse button
-bool Window::trackball_model = true;
+void LoadGLTextures();
+double Window::time = -M_PI;
 
-int Window::last_x = 0, Window::last_y = 0;
-
-Model *currentM = &Globals::hop;
-bool Window::per_pixel = false;
-int Window::fkey = 1;  // If 1, show bunny, 2->show dragon, 3->show bear
-
-GLfloat ctrlpoints[16][3] = {
-	{ -12, 0, -12 }, { -4, 0, -12 }, { 4, 0, -12 }, { 12, 0, -12 },
-	{ -12, 0, -04 }, { -4, 0, -04 }, { 4, 0, -04 }, { 12, 0, -04 },
-	{ -12, 0, 04 }, { -4, 0, 04 }, { 4, 0, 04 }, { 12, 0, 04 },
-	{ -12, 0, 12 }, { -4, 0, 12 }, { 4, 0, 12 }, { 12, 0, 12 },
-};
+bool done_texture = false;
+GLuint Window::texture[6];
 
 Vector3 cp_0(-2, 0, 2);
 Vector3 cp_1(-1, 0, 2);
@@ -38,8 +28,6 @@ Vector3 cp_13(-1, 0, -2);
 Vector3 cp_14(1, 0, -2);
 Vector3 cp_15(2, 0, -2);
 
-double control_points[] = { -2, 0, 2, -1, 0, 2, 1, 0, 2, 2, 0, 2, -2, 0, 1, -1, 0, 1, 1, 0, 1, 2, 0, 1, -2, 0, -1, -1, 0, -1, 1, 0, -1, 2, 0, -1, -2, 0, -2, -1, 0, -2, 1, 0, -2, 2, 0, -2 };
-
 //----------------------------------------------------------------------------
 // Callback method called when system is idle.
 void Window::idleCallback()
@@ -48,27 +36,6 @@ void Window::idleCallback()
 }
 
 //----------------------------------------------------------------------------
-
-void Window::processSpecialKeys(int key, int x, int y)
-{
-	glMatrixMode(GL_MODELVIEW);  // make sure we're in Modelview mode
-	switch (key) {/*
-	case GLUT_KEY_F1:
-		Window::fkey = 1;
-		currentM = &Globals::hop;
-		break;
-	case GLUT_KEY_F2:
-		Window::fkey = 2;
-		currentM = &Globals::draco;
-		break;
-	case GLUT_KEY_F3:
-		Window::fkey = 3;
-		currentM = &Globals::little_bear;
-		break;*/
-	}
-}
-
-
 // Callback method called by GLUT when graphics window is resized by the user
 void Window::reshapeCallback(int w, int h)
 {
@@ -80,7 +47,7 @@ void Window::reshapeCallback(int w, int h)
   glLoadIdentity();
   gluPerspective(Globals::viewAngle, double(width)/(double)height, 1.0, 1000.0); // set perspective projection viewing frustum
   //glTranslatef(0, 0, Globals::camZ);    // move camera back 20 units so that it looks at the origin (or else it's in the origin)
-  gluLookAt(0, 5, 0, 0, 0, 0, 0, 0, 90);
+  gluLookAt(0, 1.5, -5, 0, 0, 0, 0, 0, 30);
   glMatrixMode(GL_MODELVIEW);
 }
 
@@ -122,9 +89,98 @@ long Window::factorial(long n)
 // Callback method called by GLUT when window readraw is necessary or when glutPostRedisplay() was called.
 void Window::displayCallback()
 {
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear color and depth buffers
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear color and depth buffers
+	/* Code from https://sidvind.com/wiki/Skybox_tutorial */
+	glMatrixMode(GL_MODELVIEW); // make sure we're in Modelview mode
+
+	glPushMatrix();
+	// Reset and transform the matrix.
+	glLoadIdentity();
+	// Enable/Disable features
+	glPushAttrib(GL_ENABLE_BIT);
+	glEnable(GL_TEXTURE_2D);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_LIGHTING);
+	glDisable(GL_BLEND);
+	// Just in case we set all vertices to white.
+	glColor4f(1, 1, 1, 1);
+	Matrix4 bottom_origin;
+	bottom_origin.makeTranslate(0, 2, 0);
+	bottom_origin.makeScale(4, 4, 4);
+	bottom_origin.transpose();
+	glLoadMatrixd(bottom_origin.getPointer());
+
+	// Render the front quad
+	glBindTexture(GL_TEXTURE_2D, Window::texture[1]);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0); glVertex3f(0.5f, -0.5f, -0.5f);
+	glTexCoord2f(1, 0); glVertex3f(-0.5f, -0.5f, -0.5f);
+	glTexCoord2f(1, 1); glVertex3f(-0.5f, 0.5f, -0.5f);
+	glTexCoord2f(0, 1); glVertex3f(0.5f, 0.5f, -0.5f);
+	glEnd();
+	// Render the left quad
+	glBindTexture(GL_TEXTURE_2D, Window::texture[2]);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0); glVertex3f(0.5f, -0.5f, 0.5f);
+	glTexCoord2f(1, 0); glVertex3f(0.5f, -0.5f, -0.5f);
+	glTexCoord2f(1, 1); glVertex3f(0.5f, 0.5f, -0.5f);
+	glTexCoord2f(0, 1); glVertex3f(0.5f, 0.5f, 0.5f);
+	glEnd();
+	// Render the back quad
+	glBindTexture(GL_TEXTURE_2D, Window::texture[0]);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0); glVertex3f(-0.5f, -0.5f, 0.5f);
+	glTexCoord2f(1, 0); glVertex3f(0.5f, -0.5f, 0.5f);
+	glTexCoord2f(1, 1); glVertex3f(0.5f, 0.5f, 0.5f);
+	glTexCoord2f(0, 1); glVertex3f(-0.5f, 0.5f, 0.5f);
+	glEnd();
+	// Render the right quad
+	glBindTexture(GL_TEXTURE_2D, Window::texture[3]);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0); glVertex3f(-0.5f, -0.5f, -0.5f);
+	glTexCoord2f(1, 0); glVertex3f(-0.5f, -0.5f, 0.5f);
+	glTexCoord2f(1, 1); glVertex3f(-0.5f, 0.5f, 0.5f);
+	glTexCoord2f(0, 1); glVertex3f(-0.5f, 0.5f, -0.5f);
+	glEnd();
+	// Render the top quad
+	glBindTexture(GL_TEXTURE_2D, Window::texture[4]);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 1); glVertex3f(-0.5f, 0.5f, -0.5f);
+	glTexCoord2f(0, 0); glVertex3f(-0.5f, 0.5f, 0.5f);
+	glTexCoord2f(1, 0); glVertex3f(0.5f, 0.5f, 0.5f);
+	glTexCoord2f(1, 1); glVertex3f(0.5f, 0.5f, -0.5f);
+	glEnd();
+	// Render the bottom quad
+	glBindTexture(GL_TEXTURE_2D, Window::texture[5]);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0); glVertex3f(-0.5f, -0.5f, -0.5f);
+	glTexCoord2f(0, 1); glVertex3f(-0.5f, -0.5f, 0.5f);
+	glTexCoord2f(1, 1); glVertex3f(0.5f, -0.5f, 0.5f);
+	glTexCoord2f(1, 0); glVertex3f(0.5f, -0.5f, -0.5f);
+	glEnd();
+	// Restore enable bits and matrix
+	glPopAttrib();
+	glPopMatrix();
+	glLoadIdentity();
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
   glMatrixMode(GL_MODELVIEW);  // make sure we're in Modelview mode
-  Matrix4 glmatrix;
+
+  double amp = 0.25;
+  cp_0.setY(amp * cos(time + (M_PI / 4)));
+  cp_2.setY(amp * sin(time + (M_PI / 4)));
+  cp_3.setY(amp * cos(time + (M_PI / 4)));
+		 
+  cp_6.setY(amp * cos(time + (3 * M_PI / 4)));
+  cp_9.setY(amp * cos(time + (3 * M_PI / 4)));
+  cp_11.setY(amp * sin(time + (3 * M_PI / 4)));
+
+  cp_12.setY(amp * cos(time + (M_PI )));
+  cp_13.setY(amp * sin(time + (M_PI )));
+  cp_15.setY(amp * cos(time + (M_PI )));
+  time += 0.2;
+  if (time >= M_PI)
+	  time = -M_PI;
 
   Matrix4 Mp0;
   Mp0.setRow(0, cp_0.x, cp_1.x, cp_2.x, cp_3.x);
@@ -204,7 +260,6 @@ void Window::displayCallback()
 			q.w = 1.0;
 			v_vector.push_back(q);
 		}
-	//v_pts.push_back(new_vpts);
 	u_index += 4;
   }
   Vector3 normal;
@@ -272,178 +327,94 @@ void Window::displayCallback()
 		  glVertex3f(ptd.x, ptd.y, ptd.z);
 	  }
   }
-  /*glBegin(GL_POINTS);
-  for (int j = 0; j < v_vector.size(); j++) {
-	glVertex3f(v_vector[j].x, v_vector[j].y, v_vector[j].z);
-  }*/
   glEnd();
   glFlush();
   glutSwapBuffers();
-
-
-
-  /*if (per_pixel)
-	  Globals::point_light.off();
-  else
-	  Globals::point_light.on();
-
-  glmatrix = Globals::point.getMatrix();
-  glmatrix.transpose();
-  glLoadMatrixd(glmatrix.getPointer());
-  Globals::point.draw(1.0, 20, 20, true);
-
-  glmatrix = Globals::spot.getMatrix();
-  glmatrix.transpose();
-  glLoadMatrixd(glmatrix.getPointer());
-  Globals::point.draw(1.0, 20, 20, false);
-
-  if (fkey == 1)
-  {
-	  glmatrix = Globals::hop.getMatrix();
-	  glmatrix.transpose();
-
-	  Globals::hop_material.on();
-	  glLoadMatrixd(glmatrix.getPointer());
-
-	  Globals::hop.draw();
-  }
-  else if (fkey == 2)
-  {
-	  glmatrix = Globals::draco.getMatrix();
-	  glmatrix.transpose();
-
-	  Globals::draco_material.on();
-	  glLoadMatrixd(glmatrix.getPointer());
-	  Globals::draco.draw();
-  }
-  else if (fkey == 3)
-  {
-	  glmatrix = Globals::little_bear.getMatrix();
-	  glmatrix.transpose();
-
-	  Globals::little_bear_material.on();
-	  glLoadMatrixd(glmatrix.getPointer());
-	  Globals::little_bear.draw();
-  }*/
 }
 
-
-
-void Window::trackBallMapping(Vector3 &cp)
-{/*
-	Vector3 copy;
-	double d_height = height;
-	double d_width = width;
-	double d;
-	copy.setX(cp.getX()); copy.setY(cp.getY());  copy.setZ(cp.getZ());
-	cp.setX(((2.0  * copy.getX()) - d_width)/d_width);
-	cp.setY((d_height - (2.0 * copy.getY()))/d_height);
-	cp.setZ(0.0);
-	d = cp.length();
-	d = (d < 1.0) ? d : 1.0;
-	cp.setZ(sqrt(1.001 - d * d));
-	cp.normalize();*/
-}
-void Window::processMouse(int button, int state, int x, int y)
-{/*
-	static Vector3 last_point;
-	if (state == GLUT_DOWN)
-	{
-		if (button == GLUT_LEFT_BUTTON)
-			left_button = true;
-		else
-			left_button = false;
-		last_x = x;
-		last_y = y;
-		last_point.setX(last_x);
-		last_point.setY(last_y);
-		last_point.setZ(0);
+/* Code from http://nehe.gamedev.net/tutorial/lesson_06_texturing_update/47002/ */
+void Window::LoadGLTextures() // Load Bitmaps And Convert To Textures
+{
+	if (done_texture)
+		return;
+	/* load an image file directly as a new OpenGL texture */
+	texture[0] = SOIL_load_OGL_texture
+		(
+		"skybox_back.jpg",
+		SOIL_LOAD_AUTO,
+		SOIL_CREATE_NEW_ID,
+		SOIL_FLAG_INVERT_Y
+		);
+	if (texture[0] == 0) {
+		return;
 	}
-	else // mouse button released
-	{
-		if (button == GLUT_LEFT_BUTTON)
-		{
-			if (!trackball_model) // make spotlight point to where mouse is pointing
-			{
-				Vector3 current_point;
-				current_point.setX(x - (Window::width / 2));
-				current_point.setY((y - Window::height / 2) * -1);
-				current_point.setZ(-1.0);
-				/*double distance_to_plane = (Globals::l.dot(current_point)) + Globals::plane_distance;
-				Vector3 plane_normal;
-				plane_normal.setX(Globals::l.getX());
-				plane_normal.setY(Globals::l.getY());
-				plane_normal.setZ(Globals::l.getZ());
-				plane_normal.scale(distance_to_plane);
-				Vector3 projected_near_pt = current_point - plane_normal;*/
-
-				//projected_near_pt.setY(projected_near_pt.getY() * -1.0);
-				//Globals::spot_light.setSpotLightDirection(projected_near_pt);
-				//projected_near_pt.print("new point is");
-
-				//double t = (-1 * ((current_point.dot(Globals::l)) + Globals::plane_distance)) / (current_point.dot(projected_near_pt));
-				/*projected_near_pt.scale(t);
-				projected_near_pt = current_point + projected_near_pt;*/
-				//current_point.setZ(-1.0);
-			/*	Globals::spot_light.setSpotLightDirection(current_point);
-				//current_point.print("new direction is");
-			}
-		}
-	}*/
-}
-
-void Window::processMotion(int x, int y)
-{/*
-	Vector3 direction;
-	Vector3 last_point;
-	Vector3 current_point;
-
-	last_point.setX(last_x);
-	last_point.setY(last_y);
-	last_point.setZ(0);
-
-	current_point.setX(x);
-	current_point.setY(y);
-	current_point.setZ(0);
-
-	trackBallMapping(last_point);
-	trackBallMapping(current_point);
-
-	if (left_button) // Rotation
-	{
-		if (trackball_model) // rotate model
-		{
-			direction = current_point - last_point;
-			double velocity = direction.length();
-			if (velocity > 0.0001)
-			{
-				Vector3 rotation_axis = last_point.cross(current_point);
-				double rotation_angle = velocity * 90.0;
-
-				rotation_axis.normalize();
-				currentM->rotate(rotation_axis, rotation_angle);
-			}
-		}
+	/* load an image file directly as a new OpenGL texture */
+	texture[1] = SOIL_load_OGL_texture
+		(
+		"skybox_front.jpg",
+		SOIL_LOAD_AUTO,
+		SOIL_CREATE_NEW_ID,
+		SOIL_FLAG_INVERT_Y
+		);
+	if (texture[1] == 0) {
+		return;
 	}
-	else 
-	{
-		if (trackball_model) // Right mouse button for scale
-		{
-			double diff = current_point.getY() - last_point.getY();
-			double zoom_factor = 1.0 + diff + 0.0008;
-			currentM->scale(zoom_factor, zoom_factor, zoom_factor);
-		}
-		else // widen or narrow spotlight angle
-		{
-			double diff = current_point.getY() - last_point.getY();
-			double zoom_factor = 1.0 + diff + 0.0008;
-			if (diff < 0)
-				zoom_factor = zoom_factor * -1.0; // narrow the spotlight, if mouse moved down
-			Globals::spot_light.changeOpeningAngle(zoom_factor);
-		}
+	/* load an image file directly as a new OpenGL texture */
+	texture[2] = SOIL_load_OGL_texture
+		(
+		"skybox_left.jpg",
+		SOIL_LOAD_AUTO,
+		SOIL_CREATE_NEW_ID,
+		SOIL_FLAG_INVERT_Y
+		);
+	if (texture[2] == 0) {
+		return;
 	}
-	last_x = x;
-	last_y = y;*/
+	/* load an image file directly as a new OpenGL texture */
+	texture[3] = SOIL_load_OGL_texture
+		(
+		"skybox_right.jpg",
+		SOIL_LOAD_AUTO,
+		SOIL_CREATE_NEW_ID,
+		SOIL_FLAG_INVERT_Y
+		);
+	if (texture[3] == 0) {
+		return;
+	}
+	/* load an image file directly as a new OpenGL texture */
+	texture[4] = SOIL_load_OGL_texture
+		(
+		"skybox_top.jpg",
+		SOIL_LOAD_AUTO,
+		SOIL_CREATE_NEW_ID,
+		SOIL_FLAG_INVERT_Y
+		);
+	if (texture[4] == 0) {
+		return;
+	}
+	/* load an image file directly as a new OpenGL texture */
+	texture[5] = SOIL_load_OGL_texture
+		(
+		"skybox_bottom.jpg",
+		SOIL_LOAD_AUTO,
+		SOIL_CREATE_NEW_ID,
+		SOIL_FLAG_INVERT_Y
+		);
+	if (texture[5] == 0) {
+		return;
+	}
+
+	// Typical Texture Generation Using Data From The Bitmap
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
+
+	// Make sure no bytes are padded:
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	// Select GL_MODULATE to mix texture with polygon color for shading:
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	// Use bilinear interpolation:
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	done_texture = true;
 }
 
 void Window::processNormalKeys(unsigned char key, int x, int y){

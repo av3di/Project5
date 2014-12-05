@@ -44,12 +44,17 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\glut\glut-3.7.6-bin;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Evonee\Documents\CSE 167\Project_5\Project5\Proj5\Proj5\soil;C:\glut\glut-3.7.6-bin;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\glut\glut-3.7.6-bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Evonee\Documents\CSE 167\Project_5\Project5\Proj5\Proj5\soil\lib;C:\Users\Evonee\Documents\CSE 167\Project_5\Project5\Proj5\Proj5\soil;C:\glut\glut-3.7.6-bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>soil/src/SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -66,32 +71,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Bear.cpp" />
-    <ClCompile Include="Bunny.cpp" />
-    <ClCompile Include="Dragon.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Matrix4.cpp" />
-    <ClCompile Include="Model.cpp" />
-    <ClCompile Include="PointModel.cpp" />
-    <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="vector3.cpp" />
     <ClCompile Include="Vector4.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Bear.h" />
-    <ClInclude Include="Bunny.h" />
-    <ClInclude Include="Dragon.h" />
     <ClInclude Include="Header.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="main.h" />
-    <ClInclude Include="Material.h" />
     <ClInclude Include="Matrix4.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="PointModel.h" />
-    <ClInclude Include="Sphere.h" />
     <ClInclude Include="vector3.h" />
     <ClInclude Include="Vector4.h" />
     <ClInclude Include="Window.h" />
